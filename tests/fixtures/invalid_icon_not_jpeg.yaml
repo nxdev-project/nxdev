@@ -1,0 +1,8 @@
+schemaVersion: 1
+
+application:
+  name: "Bad Icon App"
+  author: "Dev"
+
+assets:
+  icon: "assets/icon.png"

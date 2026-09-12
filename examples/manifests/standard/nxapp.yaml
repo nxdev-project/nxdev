@@ -1,0 +1,28 @@
+schemaVersion: 1
+
+application:
+  name: "Standard Homebrew Game"
+  author: "Community Dev"
+  version: "1.2.0"
+  description: "A standard 2D homebrew game demonstrating NXDev assets and build configuration"
+
+assets:
+  icon: assets/icon.jpg
+  romfs: romfs/
+
+dependencies:
+  - nxdev.core
+  - name: switch-sdl2
+    version: "^2.28.0"
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug
+  profiles:
+    debug:
+      optimization: debug
+      symbols: true
+    release:
+      optimization: release
+      symbols: false

@@ -1,0 +1,10 @@
+schemaVersion: 1
+
+application:
+  name: "Duplicate Dep App"
+  author: "Dev"
+
+dependencies:
+  - nxdev.core
+  - nxdev.sdl2
+  - nxdev.core

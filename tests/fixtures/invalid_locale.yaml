@@ -1,0 +1,8 @@
+schemaVersion: 1
+
+application:
+  name: "Bad Locale App"
+  author: "Dev"
+  localized:
+    invalid-LOCALE-xyz:
+      name: "Bad"

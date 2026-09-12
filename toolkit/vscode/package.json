@@ -1,0 +1,56 @@
+{
+  "name": "nxdev-vscode",
+  "displayName": "NXDev Toolkit",
+  "description": "Unofficial development ecosystem and IDE tools for Nintendo Switch homebrew",
+  "version": "0.1.0-dev",
+  "publisher": "nxdev",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "switch",
+    "homebrew",
+    "libnx",
+    "devkitpro",
+    "nxdev"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onCommand:nxdev.showVersion",
+    "onCommand:nxdev.doctor"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "nxdev.showVersion",
+        "title": "NXDev: Show Version",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.doctor",
+        "title": "NXDev: Run Doctor Diagnostics",
+        "category": "NXDev"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.6"
+  }
+}

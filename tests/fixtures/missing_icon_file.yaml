@@ -1,0 +1,8 @@
+schemaVersion: 1
+
+application:
+  name: "Missing Icon App"
+  author: "Dev"
+
+assets:
+  icon: "assets/non_existent_icon.jpg"

@@ -1,0 +1,7 @@
+schemaVersion: 1
+
+application:
+  name: "NXDev HelloWorld"
+  author: "NXDev Community"
+  version: "0.1.0"
+  titleId: "0100000000001001"

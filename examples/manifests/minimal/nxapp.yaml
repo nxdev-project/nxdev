@@ -1,0 +1,6 @@
+schemaVersion: 1
+
+application:
+  name: "Minimal Switch App"
+  author: "NXDev Team"
+  version: "1.0.0"

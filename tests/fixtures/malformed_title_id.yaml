@@ -1,0 +1,6 @@
+schemaVersion: 1
+
+application:
+  name: "Bad Title ID App"
+  author: "Dev"
+  titleId: "0100-INVALID-HEX"

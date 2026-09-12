@@ -1,0 +1,9 @@
+schemaVersion: 1
+
+application:
+  name: "Typo App"
+  author: "Dev"
+  invalidUnknownProperty: true
+
+aplicationTypo:
+  someKey: 123

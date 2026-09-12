@@ -1,0 +1,5 @@
+schemaVersion: 99
+
+application:
+  name: "Bad Version App"
+  author: "Dev"

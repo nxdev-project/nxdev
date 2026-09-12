@@ -1,0 +1,70 @@
+schemaVersion: 1
+
+application:
+  name: "Advanced NXDev Engine"
+  author: "NXDev Studio"
+  version: "2.0.0"
+  titleId: "0100ABCD12340000"
+  description: "Advanced multi-language homebrew application with NACP and NPDM capabilities"
+  localized:
+    en-US:
+      name: "Advanced NXDev Engine"
+      author: "NXDev Studio"
+      description: "Advanced multi-language homebrew application"
+    ja:
+      name: "高度なNXDevエンジン"
+      author: "NXDevスタジオ"
+      description: "多言語対応の自作アプリケーション"
+    pt-BR:
+      name: "Motor NXDev Avançado"
+      author: "Estúdio NXDev"
+      description: "Aplicativo homebrew avançado com suporte a múltiplos idiomas"
+
+assets:
+  icon: assets/icon.jpg
+  romfs: romfs/
+
+dependencies:
+  - nxdev.core
+  - name: switch-sdl2
+    version: "^2.28.0"
+  - name: switch-glad
+    optional: false
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: release
+  profiles:
+    debug:
+      optimization: debug
+      symbols: true
+    release:
+      optimization: release
+      symbols: false
+
+nacp:
+  displayVersion: "2.0.0"
+  startupUserAccount: optional
+  screenshot: allow
+  videoCapture: automatic
+
+npdm:
+  preset: standard
+  mainThread:
+    priority: 44
+    core: 0
+    stackSize: 524288
+  addressSpace: 64bit
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true
+  nsp:
+    enabled: true
+
+development:
+  nxlink:
+    host: "192.168.1.100"
+    port: 28771
