@@ -1,0 +1,35 @@
+schemaVersion: 1
+
+application:
+  titleId: "0100000000000088"
+  name: "NSP Packaging Demo"
+  author: "NXDev Team"
+  version: "1.0.0"
+  description: "Demonstration of NXDevPack NSP generation via hacBrewPack backend"
+
+assets:
+  icon: assets/icon.jpg
+  romfs: romfs/
+
+dependencies:
+  - nxdev.core
+  - nxdev.filesystem
+  - nxdev.input
+  - nxdev.time
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug
+
+npdm:
+  preset: standard
+  mainThread:
+    priority: 44
+    core: 0
+    stackSize: 262144
+
+packaging:
+  defaultFormat: nsp
+  nsp:
+    enabled: true

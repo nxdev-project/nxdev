@@ -2,9 +2,9 @@
 
 namespace nxdev::display {
 
-Result DisplayManager::initialize() {
+Result<void> DisplayManager::initialize() {
     // Switch vi/applet display query wrapper in future stages
-    return results::Success;
+    return Result<void>::Success();
 }
 
 Resolution DisplayManager::get_resolution() const noexcept {

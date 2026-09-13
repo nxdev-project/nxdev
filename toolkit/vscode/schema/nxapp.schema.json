@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nxdev-project/nxdev/main/manifest/schema/nxapp.schema.json",
+  "title": "NXDevAppManifest",
+  "description": "Application and project manifest specification for Nintendo Switch homebrew applications built with NXDev",
+  "$ref": "nxapp-v1.schema.json"
+}

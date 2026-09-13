@@ -1,0 +1,2 @@
+Hello from NXDev RomFS filesystem asset!
+Built with NXDevSDK modular platform libraries.

@@ -7,6 +7,15 @@
 
 namespace fs = std::filesystem;
 
+static std::string resolve_test_path(const std::string& rel) {
+#ifdef NXDEV_SOURCE_DIR
+    fs::path base = NXDEV_SOURCE_DIR;
+    return (base / rel).lexically_normal().string();
+#else
+    return rel;
+#endif
+}
+
 int main() {
     std::cout << "[Test] Running NXDevAppManifest Test Suite...\n";
 
@@ -36,15 +45,15 @@ application:
 
     // 2. Test Example Manifest Files
     {
-        auto min_res = parser.parse_file("examples/manifests/minimal/nxapp.yaml");
+        auto min_res = parser.parse_file(resolve_test_path("examples/manifests/minimal/nxapp.yaml"));
         NXDEV_TEST_ASSERT(min_res.has_value());
 
-        auto std_res = parser.parse_file("examples/manifests/standard/nxapp.yaml");
+        auto std_res = parser.parse_file(resolve_test_path("examples/manifests/standard/nxapp.yaml"));
         NXDEV_TEST_ASSERT(std_res.has_value());
         NXDEV_TEST_ASSERT(std_res.value().assets().icon.type == nxdev::manifest::IconSourceType::ProjectFile);
         NXDEV_TEST_ASSERT(std_res.value().assets().romfs.enabled);
 
-        auto adv_res = parser.parse_file("examples/manifests/advanced/nxapp.yaml");
+        auto adv_res = parser.parse_file(resolve_test_path("examples/manifests/advanced/nxapp.yaml"));
         NXDEV_TEST_ASSERT(adv_res.has_value());
         NXDEV_TEST_ASSERT(adv_res.value().application().title_id.has_value());
         NXDEV_TEST_ASSERT(adv_res.value().application().title_id_numeric.has_value());
@@ -54,7 +63,7 @@ application:
 
     // 3. Test Unsupported Schema Version
     {
-        auto res = parser.parse_file("tests/fixtures/invalid_schema_version.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/invalid_schema_version.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         NXDEV_TEST_ASSERT(res.diagnostics.has_errors());
         bool found_code = false;
@@ -67,7 +76,7 @@ application:
 
     // 4. Test Missing Application Section
     {
-        auto res = parser.parse_file("tests/fixtures/missing_application.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/missing_application.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         NXDEV_TEST_ASSERT(res.diagnostics.has_errors());
         std::cout << "  ✓ Missing application section correctly rejected\n";
@@ -75,7 +84,7 @@ application:
 
     // 5. Test Missing Required Fields
     {
-        auto res = parser.parse_file("tests/fixtures/missing_required_fields.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/missing_required_fields.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         NXDEV_TEST_ASSERT(res.diagnostics.has_errors());
         std::cout << "  ✓ Missing required fields correctly rejected\n";
@@ -83,7 +92,7 @@ application:
 
     // 6. Test Malformed Title ID
     {
-        auto res = parser.parse_file("tests/fixtures/malformed_title_id.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/malformed_title_id.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_tid_err = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -95,7 +104,7 @@ application:
 
     // 7. Test Unknown Fields (Strict Validation)
     {
-        auto res = parser.parse_file("tests/fixtures/unknown_fields.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/unknown_fields.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_unknown = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -107,7 +116,7 @@ application:
 
     // 8. Test Duplicate Dependencies
     {
-        auto res = parser.parse_file("tests/fixtures/duplicate_dependencies.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/duplicate_dependencies.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_dup = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -119,7 +128,7 @@ application:
 
     // 9. Test Invalid Icon (Non-JPEG)
     {
-        auto res = parser.parse_file("tests/fixtures/invalid_icon_not_jpeg.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/invalid_icon_not_jpeg.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_icon_err = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -131,7 +140,7 @@ application:
 
     // 10. Test Missing Icon File
     {
-        auto res = parser.parse_file("tests/fixtures/missing_icon_file.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/missing_icon_file.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_missing = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -143,7 +152,7 @@ application:
 
     // 11. Test Invalid RomFS Path (File instead of directory)
     {
-        auto res = parser.parse_file("tests/fixtures/invalid_romfs_file.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/invalid_romfs_file.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_romfs_err = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -155,7 +164,7 @@ application:
 
     // 12. Test Invalid Locale
     {
-        auto res = parser.parse_file("tests/fixtures/invalid_locale.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/invalid_locale.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_loc_err = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -167,7 +176,7 @@ application:
 
     // 13. Test Malformed YAML Syntax
     {
-        auto res = parser.parse_file("tests/fixtures/malformed_yaml.yaml");
+        auto res = parser.parse_file(resolve_test_path("tests/fixtures/malformed_yaml.yaml"));
         NXDEV_TEST_ASSERT(!res.has_value());
         bool found_syntax = false;
         for (const auto& d : res.diagnostics.diagnostics()) {
@@ -179,11 +188,11 @@ application:
 
     // 14. Test Discovery Mechanism
     {
-        auto discovered = parser.discover_manifest("examples/manifests/standard/assets");
+        auto discovered = parser.discover_manifest(resolve_test_path("examples/manifests/standard/assets"));
         NXDEV_TEST_ASSERT(discovered.has_value());
         NXDEV_TEST_ASSERT(discovered->find("examples/manifests/standard/nxapp.yaml") != std::string::npos);
 
-        auto disc_load = parser.load_from_discovery("examples/manifests/standard/romfs");
+        auto disc_load = parser.load_from_discovery(resolve_test_path("examples/manifests/standard/romfs"));
         NXDEV_TEST_ASSERT(disc_load.has_value());
         NXDEV_TEST_ASSERT(disc_load.value().application().name == "Standard Homebrew Game");
         std::cout << "  ✓ Discovery from subdirectories passed\n";
@@ -191,7 +200,7 @@ application:
 
     // 15. Test Serialization
     {
-        auto res = parser.parse_file("examples/manifests/advanced/nxapp.yaml");
+        auto res = parser.parse_file(resolve_test_path("examples/manifests/advanced/nxapp.yaml"));
         NXDEV_TEST_ASSERT(res.has_value());
         std::string json = res.value().to_json();
         NXDEV_TEST_ASSERT(json.find("\"name\": \"Advanced NXDev Engine\"") != std::string::npos);

@@ -1,0 +1,20 @@
+schemaVersion: 1
+
+application:
+  id: "0100000000001001"
+  name: "Hello NXDev"
+  author: "NXDev Team"
+  version: "0.1.0"
+  description: "Modern C++20 Nintendo Switch homebrew sample using NXDevSDK Core"
+
+build:
+  language: cpp
+  standard: c++20
+  defaultProfile: debug
+  dependencies:
+    - nxdev.core
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true

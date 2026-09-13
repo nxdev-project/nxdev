@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/nxdev-project/nxdev/main/manifest/schema/nxapp-v1.schema.json",
+  "title": "NXDevAppManifest v1",
+  "description": "Application and project manifest specification for Nintendo Switch homebrew applications built with NXDev",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "enum": [1],
+      "description": "Manifest schema specification version. Must be 1 for NXDevAppManifest v1."
+    },
+    "application": {
+      "type": "object",
+      "description": "Core identity and display metadata for the application",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "Primary display name of the application"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "Author, developer name, or development group"
+        },
+        "version": {
+          "type": "string",
+          "description": "Application display version (e.g. '1.0.0')"
+        },
+        "titleId": {
+          "type": "string",
+          "pattern": "^(0x|0X)?[0-9A-Fa-f]{16}$",
+          "description": "16-digit hexadecimal Nintendo Title ID (e.g. '0100000000001000'). Required for NSP installations."
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of the application"
+        },
+        "localized": {
+          "type": "object",
+          "description": "Language-specific overrides for name, author, and description",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "author": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["name", "author"]
+    },
+    "assets": {
+      "type": "object",
+      "description": "Project asset configuration (paths are resolved relative to nxapp.yaml)",
+      "additionalProperties": false,
+      "properties": {
+        "icon": {
+          "type": "string",
+          "description": "Path to JPEG application icon (.jpg / .jpeg). Falls back to libnx default icon if omitted."
+        },
+        "romfs": {
+          "type": "string",
+          "description": "Path to RomFS directory containing embedded application assets"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "List of NXDev/portlib package dependencies",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Package name shorthand (e.g. 'nxdev.sdl2')"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "description": "Package name" },
+              "version": { "type": "string", "description": "Version requirement string", "default": "*" },
+              "optional": { "type": "boolean", "default": false }
+            },
+            "required": ["name"]
+          }
+        ]
+      }
+    },
+    "build": {
+      "type": "object",
+      "description": "Build orchestration and semantic compiler settings",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": ["cpp", "c"],
+          "default": "cpp"
+        },
+        "standard": {
+          "type": "string",
+          "enum": ["c++20", "c++17", "c++23", "c11", "c17"],
+          "default": "c++20"
+        },
+        "sources": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "includes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "defines": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "defaultProfile": {
+          "type": "string",
+          "default": "debug"
+        },
+        "profiles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "optimization": {
+                "type": "string",
+                "enum": ["debug", "release", "size", "fast"]
+              },
+              "symbols": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "nacp": {
+      "type": "object",
+      "description": "Nintendo Application Control Property (NACP) settings",
+      "additionalProperties": false,
+      "properties": {
+        "displayVersion": {
+          "type": "string",
+          "description": "Display version in homebrew menu (defaults to application.version)"
+        },
+        "startupUserAccount": {
+          "type": "string",
+          "enum": ["none", "required", "optional"],
+          "default": "none"
+        },
+        "userAccountSwitchLock": {
+          "type": "boolean",
+          "default": false
+        },
+        "screenshot": {
+          "type": "string",
+          "enum": ["allow", "deny"],
+          "default": "allow"
+        },
+        "videoCapture": {
+          "type": "string",
+          "enum": ["disabled", "manual", "automatic"],
+          "default": "disabled"
+        },
+        "logoType": {
+          "type": "string",
+          "enum": ["licensedByNintendo", "nintendo", "distributedByNintendo"],
+          "default": "licensedByNintendo"
+        },
+        "parentalControl": {
+          "type": "string",
+          "enum": ["free", "restricted"],
+          "default": "free"
+        }
+      }
+    },
+    "npdm": {
+      "type": "object",
+      "description": "Nintendo Program Descriptor Metadata (NPDM) settings for executable permissions and capabilities",
+      "additionalProperties": false,
+      "properties": {
+        "preset": {
+          "type": "string",
+          "enum": ["standard", "network", "filesystem", "multimedia", "advanced"],
+          "default": "standard"
+        },
+        "mainThread": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "priority": { "type": "integer", "default": 44 },
+            "core": { "type": "integer", "default": 0 },
+            "stackSize": { "type": "integer", "default": 262144 }
+          }
+        },
+        "addressSpace": {
+          "type": "string",
+          "enum": ["64bit", "32bit", "32bitNoMap", "64bitOld"],
+          "default": "64bit"
+        },
+        "services": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "filesystem": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "kernelCapabilities": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "packaging": {
+      "type": "object",
+      "description": "Packaging output configuration",
+      "additionalProperties": false,
+      "properties": {
+        "defaultFormat": {
+          "type": "string",
+          "enum": ["nro", "nsp"],
+          "default": "nro"
+        },
+        "nro": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean", "default": true }
+          }
+        },
+        "nsp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean", "default": false }
+          }
+        }
+      }
+    },
+    "development": {
+      "type": "object",
+      "description": "Project-shared development workflow settings",
+      "additionalProperties": false,
+      "properties": {
+        "nxlink": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "host": { "type": "string" },
+            "port": { "type": "integer", "default": 28771 }
+          }
+        }
+      }
+    }
+  },
+  "required": ["schemaVersion", "application"]
+}

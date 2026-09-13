@@ -13,10 +13,16 @@ int main() {
     }
 
     nxdev::input::InputManager input;
-    input.initialize();
+    if (auto res = input.initialize(); res.is_failure()) {
+        std::cerr << "Input init failed: " << res.get_error_name() << "\n";
+        return 1;
+    }
 
     nxdev::display::DisplayManager display;
-    display.initialize();
+    if (auto res = display.initialize(); res.is_failure()) {
+        std::cerr << "Display init failed: " << res.get_error_name() << "\n";
+        return 1;
+    }
 
     auto res_info = display.get_resolution();
     std::cout << "Display resolution: " << res_info.width << "x" << res_info.height << "\n";

@@ -1,0 +1,115 @@
+name: NXDev Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    name: Build Host Binaries (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: nxdev-linux-x86_64
+          - os: windows-latest
+            artifact_name: nxdev-windows-x86_64
+          - os: macos-latest
+            artifact_name: nxdev-macos-universal
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up CMake and Ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build NXDev
+        run: cmake --build build --config Release
+
+      - name: Run Test Suite
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Package Host Binaries
+        shell: bash
+        run: |
+          mkdir -p release-dist/bin
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp build/cli/Release/nxdev.exe release-dist/bin/ || cp build/cli/nxdev.exe release-dist/bin/
+            cd release-dist && 7z a ../${{ matrix.artifact_name }}.zip *
+          else
+            cp build/cli/nxdev release-dist/bin/
+            cd release-dist && tar -czvf ../${{ matrix.artifact_name }}.tar.gz *
+          fi
+
+      - name: Upload Host Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: |
+            nxdev-*.tar.gz
+            nxdev-*.zip
+
+  build-extension:
+    name: Package VS Code Extension
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies & compile
+        working-directory: toolkit/vscode
+        run: |
+          npm ci
+          npm run compile
+          npm test
+
+      - name: Package VSIX
+        working-directory: toolkit/vscode
+        run: npx @vscode/vsce package --no-git-tag-version --out ../../nxdev-toolkit.vsix
+
+      - name: Upload Extension Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nxdev-toolkit-vsix
+          path: nxdev-toolkit.vsix
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [build-release, build-extension]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare Release Directory & Checksums
+        run: |
+          mkdir -p final-release
+          find artifacts/ -type f \( -name "*.tar.gz" -o -name "*.zip" -o -name "*.vsix" \) -exec cp {} final-release/ \;
+          cd final-release
+          sha256sum * > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            final-release/*
+          draft: false
+          prerelease: true
+          generate_release_notes: true

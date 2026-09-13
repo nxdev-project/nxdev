@@ -1,0 +1,22 @@
+schemaVersion: 1
+
+application:
+  titleId: "0100000000000042"
+  name: "sdl2-demo"
+  author: "NXDev Team"
+  version: "1.0.0"
+  description: "SDL2 Demo Application on Nintendo Switch using NXDev"
+
+dependencies:
+  - nxdev.core
+  - nxdev.sdl2
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true

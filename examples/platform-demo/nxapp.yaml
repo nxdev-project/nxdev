@@ -1,0 +1,29 @@
+schemaVersion: 1
+
+application:
+  id: "0100000000002001"
+  name: "Platform Demo"
+  author: "NXDev Team"
+  version: "1.0.0"
+  description: "Demonstration of NXDev platform modules (Input, Filesystem, Account, Network, Time, Power)"
+
+build:
+  language: cpp
+  standard: c++20
+  defaultProfile: debug
+  dependencies:
+    - nxdev.core
+    - nxdev.input
+    - nxdev.filesystem
+    - nxdev.account
+    - nxdev.network
+    - nxdev.time
+    - nxdev.power
+  romfs:
+    enabled: true
+    directory: "romfs"
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true

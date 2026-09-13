@@ -20,7 +20,7 @@ public:
     DisplayManager() = default;
     ~DisplayManager() = default;
 
-    Result initialize();
+    Result<void> initialize();
     [[nodiscard]] Resolution get_resolution() const noexcept;
     [[nodiscard]] ConsoleMode get_console_mode() const noexcept;
     void finalize();

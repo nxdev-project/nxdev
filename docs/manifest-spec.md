@@ -1,51 +1,19 @@
 # NXDevAppManifest Specification (`nxapp.yaml`)
 
-The `nxapp.yaml` manifest is the central configuration file for an NXDev homebrew application.
+**NXDevAppManifest** defines the versioned project and application manifest format for the NXDev ecosystem.
 
-## Schema Versioning
+For the comprehensive documentation suite, see:
 
-Manifests must specify a format version:
+- [NXDevAppManifest Overview](manifest/README.md)
+- [Complete Reference & Syntax](manifest/reference.md)
+- [Application Metadata & Localization](manifest/application.md)
+- [Assets & Icon Fallbacks](manifest/assets.md)
+- [Dependencies](manifest/dependencies.md)
+- [NACP Configuration](manifest/nacp.md)
+- [NPDM Configuration](manifest/npdm.md)
+- [Build Profiles](manifest/build.md)
+- [Packaging Options](manifest/packaging.md)
 
-```yaml
-manifest_version: "1.0"
-```
-
-## Structure Reference
-
-```yaml
-manifest_version: "1.0"
-
-app:
-  name: "SampleHomebrew"
-  author: "DeveloperName"
-  version: "1.0.0"
-  title_id: "010012345678ABCD"
-  icon: "assets/icon.png"
-
-target:
-  romfs_dir: "assets/romfs"
-  nro_output: "bin/SampleHomebrew.nro"
-  nsp_output: "bin/SampleHomebrew.nsp"
-
-dependencies:
-  - name: "switch-sdl2"
-    version: "^2.28.0"
-  - name: "switch-glad"
-    optional: false
-
-profiles:
-  debug:
-    flags: ["-g", "-O0"]
-    definitions: ["DEBUG=1"]
-  release:
-    flags: ["-O3"]
-    definitions: ["NDEBUG=1"]
-```
-
-## Future Implementation Roadmap
-
-Subsequent stages will introduce:
-1. Strict schema validation with error line mapping.
-2. NACP metadata block generation.
-3. NPDM permission generator.
-4. Portlib dependency resolver mapping into devkitPro pacman packages.
+JSON Schema is available at:
+- [`manifest/schema/nxapp-v1.schema.json`](../manifest/schema/nxapp-v1.schema.json)
+- [`manifest/schema/nxapp.schema.json`](../manifest/schema/nxapp.schema.json)

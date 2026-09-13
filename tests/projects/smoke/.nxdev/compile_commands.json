@@ -1,0 +1,80 @@
+[
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/app.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/core/src/app.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/core/src/app.cpp",
+  "output": "CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/app.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/result.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/core/src/result.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/core/src/result.cpp",
+  "output": "CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/result.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/log.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/core/src/log.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/core/src/log.cpp",
+  "output": "CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/log.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/system.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/core/src/system.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/core/src/system.cpp",
+  "output": "CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/system.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/version.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/core/src/version.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/core/src/version.cpp",
+  "output": "CMakeFiles/nxdev_core.dir/home/jvrcruz/Projects/NXDev/sdk/core/src/version.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/input/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_input.dir/home/jvrcruz/Projects/NXDev/sdk/modules/input/src/input.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/input/src/input.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/input/src/input.cpp",
+  "output": "CMakeFiles/nxdev_input.dir/home/jvrcruz/Projects/NXDev/sdk/modules/input/src/input.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/filesystem/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_filesystem.dir/home/jvrcruz/Projects/NXDev/sdk/modules/filesystem/src/filesystem.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/filesystem/src/filesystem.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/filesystem/src/filesystem.cpp",
+  "output": "CMakeFiles/nxdev_filesystem.dir/home/jvrcruz/Projects/NXDev/sdk/modules/filesystem/src/filesystem.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/account/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_account.dir/home/jvrcruz/Projects/NXDev/sdk/modules/account/src/account.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/account/src/account.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/account/src/account.cpp",
+  "output": "CMakeFiles/nxdev_account.dir/home/jvrcruz/Projects/NXDev/sdk/modules/account/src/account.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/network/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_network.dir/home/jvrcruz/Projects/NXDev/sdk/modules/network/src/network.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/network/src/network.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/network/src/network.cpp",
+  "output": "CMakeFiles/nxdev_network.dir/home/jvrcruz/Projects/NXDev/sdk/modules/network/src/network.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/time/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_time.dir/home/jvrcruz/Projects/NXDev/sdk/modules/time/src/time.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/time/src/time.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/time/src/time.cpp",
+  "output": "CMakeFiles/nxdev_time.dir/home/jvrcruz/Projects/NXDev/sdk/modules/time/src/time.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/power/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_power.dir/home/jvrcruz/Projects/NXDev/sdk/modules/power/src/power.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/power/src/power.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/power/src/power.cpp",
+  "output": "CMakeFiles/nxdev_power.dir/home/jvrcruz/Projects/NXDev/sdk/modules/power/src/power.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/display/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_display.dir/home/jvrcruz/Projects/NXDev/sdk/modules/display/src/display.cpp.obj -c /home/jvrcruz/Projects/NXDev/sdk/modules/display/src/display.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/sdk/modules/display/src/display.cpp",
+  "output": "CMakeFiles/nxdev_display.dir/home/jvrcruz/Projects/NXDev/sdk/modules/display/src/display.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/core/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/input/include -I/home/jvrcruz/Projects/NXDev/cmake/../sdk/modules/filesystem/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/smoke-app.dir/src/main.cpp.obj -c /home/jvrcruz/Projects/NXDev/tests/projects/smoke/src/main.cpp",
+  "file": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/src/main.cpp",
+  "output": "CMakeFiles/smoke-app.dir/src/main.cpp.obj"
+}
+]

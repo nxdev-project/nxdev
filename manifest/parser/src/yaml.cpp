@@ -293,8 +293,7 @@ private:
         // Check if followed by colon ':'
         size_t look = pos_;
         while (look < input_.size() && (input_[look] == ' ' || input_[look] == '\t')) look++;
-        if (look < input_.size() && input_[look] == ':' &&
-            (look + 1 >= input_.size() || input_[look + 1] == ' ' || input_[look + 1] == '\n' || input_[look + 1] == '\r')) {
+        if (look < input_.size() && input_[look] == ':') {
             // It's a mapping key
             pos_ = look + 1;
             col_ += (pos_ - look);
@@ -376,6 +375,12 @@ private:
         }
     }
 
+    void skip_flow_whitespace() {
+        while (current_.type == TokenType::Newline || current_.type == TokenType::Indent) {
+            advance();
+        }
+    }
+
     std::optional<YamlNode> parse_node(size_t base_indent, size_t depth, YamlParseError& err) {
         if (depth > YamlParser::MAX_RECURSION_DEPTH) {
             err = {"Maximum YAML nesting recursion depth exceeded", current_.location};
@@ -415,15 +420,14 @@ private:
         YamlNode::SequenceType seq;
 
         while (current_.type != TokenType::RBracket && current_.type != TokenType::Eof) {
-            skip_newlines();
+            skip_flow_whitespace();
             if (current_.type == TokenType::RBracket) break;
-            if (current_.type == TokenType::Indent) advance();
 
             auto item = parse_node(0, depth + 1, err);
             if (!item) return std::nullopt;
             seq.push_back(std::move(*item));
 
-            skip_newlines();
+            skip_flow_whitespace();
             if (current_.type == TokenType::Comma) {
                 advance();
             } else if (current_.type != TokenType::RBracket) {
@@ -446,9 +450,8 @@ private:
         YamlNode::MappingType map;
 
         while (current_.type != TokenType::RBrace && current_.type != TokenType::Eof) {
-            skip_newlines();
+            skip_flow_whitespace();
             if (current_.type == TokenType::RBrace) break;
-            if (current_.type == TokenType::Indent) advance();
 
             if (current_.type != TokenType::Key && current_.type != TokenType::Scalar) {
                 err = {"Expected key in flow mapping", current_.location};
@@ -457,12 +460,12 @@ private:
             std::string key = current_.value;
             advance();
 
-            skip_newlines();
+            skip_flow_whitespace();
             auto val = parse_node(0, depth + 1, err);
             if (!val) return std::nullopt;
             map.emplace_back(std::move(key), std::move(*val));
 
-            skip_newlines();
+            skip_flow_whitespace();
             if (current_.type == TokenType::Comma) {
                 advance();
             } else if (current_.type != TokenType::RBrace) {

@@ -1,0 +1,28 @@
+schemaVersion: 1
+
+application:
+  titleId: "0100000000000077"
+  name: "NRO Packaging Demo"
+  author: "NXDev Team"
+  version: "1.0.0"
+  description: "Demonstration of NXDevPack NRO generation with custom icon and RomFS"
+
+assets:
+  icon: assets/icon.jpg
+  romfs: romfs/
+
+dependencies:
+  - nxdev.core
+  - nxdev.filesystem
+  - nxdev.input
+  - nxdev.time
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true

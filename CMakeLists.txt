@@ -33,6 +33,7 @@ if(NXDEV_BUILD_MANIFEST)
 endif()
 
 if(NXDEV_BUILD_PACK)
+    add_subdirectory(third_party)
     add_subdirectory(pack)
 endif()
 

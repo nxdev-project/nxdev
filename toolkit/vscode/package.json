@@ -1,9 +1,14 @@
 {
-  "name": "nxdev-vscode",
-  "displayName": "NXDev Toolkit",
-  "description": "Unofficial development ecosystem and IDE tools for Nintendo Switch homebrew",
-  "version": "0.1.0-dev",
+  "name": "nxdev-toolkit",
+  "displayName": "NXDevToolkit",
+  "description": "Rich IDE integration and development toolkit for Nintendo Switch homebrew using NXDev",
+  "version": "0.1.0-beta.1",
   "publisher": "nxdev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nxdev-project/nxdev.git"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -13,27 +18,533 @@
   ],
   "keywords": [
     "switch",
+    "nintendo",
     "homebrew",
     "libnx",
     "devkitpro",
-    "nxdev"
+    "nxdev",
+    "nro",
+    "nsp"
   ],
+  "icon": "resources/icon.png",
   "main": "./out/extension.js",
   "activationEvents": [
-    "onCommand:nxdev.showVersion",
-    "onCommand:nxdev.doctor"
+    "workspaceContains:**/nxapp.yaml",
+    "workspaceContains:**/nxapp.yml"
   ],
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "nxdev",
+          "title": "NXDev",
+          "icon": "resources/nxdev.svg"
+        }
+      ]
+    },
+    "views": {
+      "nxdev": [
+        {
+          "id": "nxdev-project",
+          "name": "NXDev Project",
+          "icon": "resources/nxdev.svg",
+          "visibility": "visible"
+        },
+        {
+          "id": "nxdev-environment",
+          "name": "Environment & Diagnostics",
+          "icon": "resources/nxdev.svg",
+          "visibility": "visible"
+        },
+        {
+          "id": "nxdev-packages",
+          "name": "SDK Modules & Dependencies",
+          "icon": "resources/nxdev.svg",
+          "visibility": "visible"
+        },
+        {
+          "id": "nxdev-devices",
+          "name": "Target Devices",
+          "icon": "resources/nxdev.svg",
+          "visibility": "visible"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "nxdev.showVersion",
-        "title": "NXDev: Show Version",
+        "title": "Show Version",
         "category": "NXDev"
       },
       {
         "command": "nxdev.doctor",
-        "title": "NXDev: Run Doctor Diagnostics",
+        "title": "Run Doctor Diagnostics",
+        "category": "NXDev",
+        "icon": "$(heart)"
+      },
+      {
+        "command": "nxdev.showEnvironment",
+        "title": "Show Environment Info",
+        "category": "NXDev",
+        "icon": "$(info)"
+      },
+      {
+        "command": "nxdev.refreshEnvironment",
+        "title": "Refresh Environment",
+        "category": "NXDev",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "nxdev.showStatusBarMenu",
+        "title": "Show Status Menu",
         "category": "NXDev"
+      },
+      {
+        "command": "nxdev.openManifest",
+        "title": "Open Manifest (nxapp.yaml)",
+        "category": "NXDev",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "nxdev.validateManifest",
+        "title": "Validate Manifest",
+        "category": "NXDev",
+        "icon": "$(check)"
+      },
+      {
+        "command": "nxdev.inspectManifest",
+        "title": "Inspect Manifest (JSON Summary)",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.selectProfile",
+        "title": "Select Build Profile (Debug/Release)",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.createProject",
+        "title": "Create New NXDev Project Manifest",
+        "category": "NXDev",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "nxdev.configure",
+        "title": "Configure CMake",
+        "category": "NXDev",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "nxdev.build",
+        "title": "Build Application (Active Profile)",
+        "category": "NXDev",
+        "icon": "$(play)"
+      },
+      {
+        "command": "nxdev.buildDebug",
+        "title": "Build Application (Debug)",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.buildRelease",
+        "title": "Build Application (Release)",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.clean",
+        "title": "Clean Build Artifacts",
+        "category": "NXDev",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "nxdev.packNro",
+        "title": "Package NRO (.nro)",
+        "category": "NXDev",
+        "icon": "$(package)"
+      },
+      {
+        "command": "nxdev.packNsp",
+        "title": "Package NSP (.nsp)",
+        "category": "NXDev",
+        "icon": "$(package)"
+      },
+      {
+        "command": "nxdev.openOutputFolder",
+        "title": "Open Output Folder",
+        "category": "NXDev",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "nxdev.installMissingPackages",
+        "title": "Install Missing SDK Dependencies",
+        "category": "NXDev",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "nxdev.installPackage",
+        "title": "Install SDK Module / Package",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.removePackage",
+        "title": "Remove SDK Module / Package",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.addDependency",
+        "title": "Add Dependency to nxapp.yaml",
+        "category": "NXDev"
+      },
+      {
+        "command": "nxdev.refreshProjects",
+        "title": "Refresh Project Explorer",
+        "category": "NXDev",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "nxdev.refreshPackages",
+        "title": "Refresh SDK Modules",
+        "category": "NXDev",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "nxdev.run",
+        "title": "Run on Switch (nxlink)",
+        "category": "NXDev",
+        "icon": "$(play)"
+      },
+      {
+        "command": "nxdev.deploy",
+        "title": "Deploy NRO to Switch",
+        "category": "NXDev",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "nxdev.stopRun",
+        "title": "Stop Active Run Session",
+        "category": "NXDev",
+        "icon": "$(primitive-square)"
+      },
+      {
+        "command": "nxdev.symbolize",
+        "title": "Symbolize Crash Address",
+        "category": "NXDev",
+        "icon": "$(debug-console)"
+      },
+      {
+        "command": "nxdev.devices.add",
+        "title": "Add Target Device",
+        "category": "NXDev",
+        "icon": "$(add)"
+      },
+      {
+        "command": "nxdev.devices.remove",
+        "title": "Remove Target Device",
+        "category": "NXDev",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "nxdev.devices.setDefault",
+        "title": "Set as Default Device",
+        "category": "NXDev",
+        "icon": "$(star)"
+      },
+      {
+        "command": "nxdev.devices.test",
+        "title": "Test Device Connection",
+        "category": "NXDev",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "nxdev.devices.refresh",
+        "title": "Refresh Devices",
+        "category": "NXDev",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "nxdev.refreshProjects",
+          "when": "view == nxdev-project",
+          "group": "navigation"
+        },
+        {
+          "command": "nxdev.refreshEnvironment",
+          "when": "view == nxdev-environment",
+          "group": "navigation"
+        },
+        {
+          "command": "nxdev.doctor",
+          "when": "view == nxdev-environment",
+          "group": "navigation"
+        },
+        {
+          "command": "nxdev.refreshPackages",
+          "when": "view == nxdev-packages",
+          "group": "navigation"
+        },
+        {
+          "command": "nxdev.installMissingPackages",
+          "when": "view == nxdev-packages",
+          "group": "navigation"
+        },
+        {
+          "command": "nxdev.devices.add",
+          "when": "view == nxdev-devices",
+          "group": "navigation"
+        },
+        {
+          "command": "nxdev.devices.refresh",
+          "when": "view == nxdev-devices",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "nxdev.openManifest",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "inline"
+        },
+        {
+          "command": "nxdev.run",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "1_run"
+        },
+        {
+          "command": "nxdev.deploy",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "1_run"
+        },
+        {
+          "command": "nxdev.build",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "2_build"
+        },
+        {
+          "command": "nxdev.packNro",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "3_pack"
+        },
+        {
+          "command": "nxdev.packNsp",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "3_pack"
+        },
+        {
+          "command": "nxdev.clean",
+          "when": "view == nxdev-project && viewItem == projectRoot",
+          "group": "4_clean"
+        },
+        {
+          "command": "nxdev.installPackage",
+          "when": "view == nxdev-packages && viewItem =~ /pkgItem-not_installed|pkgItem-missing/",
+          "group": "inline"
+        },
+        {
+          "command": "nxdev.removePackage",
+          "when": "view == nxdev-packages && viewItem == pkgItem-installed",
+          "group": "1_manage"
+        },
+        {
+          "command": "nxdev.addDependency",
+          "when": "view == nxdev-packages && viewItem =~ /pkgItem.*/",
+          "group": "2_manifest"
+        },
+        {
+          "command": "nxdev.devices.test",
+          "when": "view == nxdev-devices && viewItem =~ /deviceItem.*/",
+          "group": "1_manage"
+        },
+        {
+          "command": "nxdev.devices.setDefault",
+          "when": "view == nxdev-devices && viewItem == deviceItem",
+          "group": "1_manage"
+        },
+        {
+          "command": "nxdev.devices.remove",
+          "when": "view == nxdev-devices && viewItem =~ /deviceItem.*/",
+          "group": "2_remove"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "nxdev.showVersion"
+        },
+        {
+          "command": "nxdev.doctor"
+        },
+        {
+          "command": "nxdev.showEnvironment"
+        },
+        {
+          "command": "nxdev.openManifest"
+        },
+        {
+          "command": "nxdev.validateManifest"
+        },
+        {
+          "command": "nxdev.inspectManifest"
+        },
+        {
+          "command": "nxdev.selectProfile"
+        },
+        {
+          "command": "nxdev.createProject"
+        },
+        {
+          "command": "nxdev.configure"
+        },
+        {
+          "command": "nxdev.build"
+        },
+        {
+          "command": "nxdev.buildDebug"
+        },
+        {
+          "command": "nxdev.buildRelease"
+        },
+        {
+          "command": "nxdev.clean"
+        },
+        {
+          "command": "nxdev.packNro"
+        },
+        {
+          "command": "nxdev.packNsp"
+        },
+        {
+          "command": "nxdev.openOutputFolder"
+        },
+        {
+          "command": "nxdev.run"
+        },
+        {
+          "command": "nxdev.deploy"
+        },
+        {
+          "command": "nxdev.stopRun"
+        },
+        {
+          "command": "nxdev.symbolize"
+        },
+        {
+          "command": "nxdev.devices.add"
+        },
+        {
+          "command": "nxdev.devices.remove"
+        },
+        {
+          "command": "nxdev.devices.setDefault"
+        },
+        {
+          "command": "nxdev.devices.test"
+        },
+        {
+          "command": "nxdev.installMissingPackages"
+        },
+        {
+          "command": "nxdev.installPackage"
+        },
+        {
+          "command": "nxdev.removePackage"
+        },
+        {
+          "command": "nxdev.addDependency"
+        }
+      ]
+    },
+    "taskDefinitions": [
+      {
+        "type": "nxdev",
+        "required": [
+          "task"
+        ],
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "NXDev task name (configure, build, clean, pack-nro, pack-nsp, deploy, run)"
+          },
+          "profile": {
+            "type": "string",
+            "description": "Build profile (debug or release)"
+          },
+          "clean": {
+            "type": "boolean",
+            "description": "Clean before building"
+          }
+        }
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "NXDev Toolkit",
+      "properties": {
+        "nxdev.cliPath": {
+          "type": "string",
+          "default": "nxdev",
+          "description": "Path to the nxdev CLI executable. Defaults to 'nxdev' found in system PATH."
+        },
+        "nxdev.run.defaultDevice": {
+          "type": "string",
+          "default": "",
+          "description": "Default target device ID or IP address override for run and deploy commands."
+        },
+        "nxdev.run.autoSymbolizeCrashes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically capture and symbolize crash backtrace addresses during nxdev run sessions."
+        },
+        "nxdev.wsl.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run NXDev commands through WSL (Windows Subsystem for Linux) when running VS Code on Windows."
+        },
+        "nxdev.wsl.distribution": {
+          "type": "string",
+          "default": "",
+          "description": "Target WSL distribution name (optional, defaults to default WSL distribution)."
+        },
+        "nxdev.environment.devkitProPath": {
+          "type": "string",
+          "default": "",
+          "description": "devkitPro root path override. If left empty, NXDev uses system DEVKITPRO environment variable."
+        },
+        "nxdev.build.defaultProfile": {
+          "type": "string",
+          "enum": [
+            "debug",
+            "release"
+          ],
+          "default": "debug",
+          "description": "Default build profile for compilation and packaging operations."
+        },
+        "nxdev.diagnostics.enableManifestValidation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time semantic manifest diagnostics and validation on nxapp.yaml changes."
+        },
+        "nxdev.logLevel": {
+          "type": "string",
+          "enum": [
+            "debug",
+            "info",
+            "warn",
+            "error"
+          ],
+          "default": "info",
+          "description": "Logging level for the NXDev Output Channel."
+        }
+      }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "nxapp.yaml",
+          "nxapp.yml",
+          "**/nxapp.yaml",
+          "**/nxapp.yml"
+        ],
+        "url": "./schema/nxapp.schema.json"
       }
     ]
   },
@@ -41,16 +552,20 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "lint": "eslint src --ext ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "lint": "eslint src test --ext ts",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "npm run compile && mocha --require ts-node/register --require ./test/setup.ts --ui tdd \"test/**/*.test.ts\""
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.45.0",
+    "mocha": "^10.8.2",
     "prettier": "^3.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.1.6"
   }
 }

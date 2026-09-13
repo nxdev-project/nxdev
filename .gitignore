@@ -1,0 +1,45 @@
+# Build directories
+build/
+bin/
+lib/
+out/
+dist/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# VS Code / Toolkit
+toolkit/vscode/node_modules/
+toolkit/vscode/out/
+toolkit/vscode/dist/
+toolkit/vscode/*.vsix
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+*.user
+
+# Test & Coverage artifacts
+Testing/
+*.gcda
+*.gcno
+*.gcov
+coverage/
+
+# Binary & Packaging outputs
+*.nro
+*.nacp
+*.nso
+*.nsp
+*.npdm
+*.elf
+*.bin

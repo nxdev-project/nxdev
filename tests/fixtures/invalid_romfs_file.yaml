@@ -5,4 +5,4 @@ application:
   author: "Dev"
 
 assets:
-  romfs: "VERSION"
+  romfs: "invalid_romfs_file.yaml"

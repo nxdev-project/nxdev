@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "minimal-c",
+      "name": "Minimal C (Raw libnx)",
+      "description": "Minimal Nintendo Switch homebrew application in C using raw libnx console and input.",
+      "language": "c",
+      "tags": ["c", "libnx", "minimal", "console"],
+      "defaultMain": "src/main.c",
+      "dependencies": []
+    },
+    {
+      "id": "minimal-cpp",
+      "name": "Minimal C++ (Raw libnx)",
+      "description": "Minimal Nintendo Switch homebrew application in C++20 using raw libnx.",
+      "language": "cpp",
+      "tags": ["cpp", "libnx", "minimal", "console"],
+      "defaultMain": "src/main.cpp",
+      "dependencies": []
+    },
+    {
+      "id": "console-cpp",
+      "name": "NXDevSDK C++ Application",
+      "description": "Recommended starting point using modern C++ abstractions (NXDev::Core and NXDev::Input).",
+      "language": "cpp",
+      "tags": ["cpp", "nxdev", "sdk", "recommended"],
+      "defaultMain": "src/main.cpp",
+      "dependencies": ["nxdev.core", "nxdev.input"]
+    },
+    {
+      "id": "sdl2",
+      "name": "SDL2 Application",
+      "description": "2D graphics, sound, and input application using devkitPro SDL2 portlib and NXDevSDK.",
+      "language": "cpp",
+      "tags": ["cpp", "sdl2", "graphics", "2d"],
+      "defaultMain": "src/main.cpp",
+      "dependencies": ["nxdev.core", "nxdev.sdl2"]
+    },
+    {
+      "id": "deko3d",
+      "name": "deko3d Graphics Application (Experimental)",
+      "description": "Low-level, modern 3D graphics application using the deko3d API on Nintendo Switch.",
+      "language": "cpp",
+      "tags": ["cpp", "deko3d", "graphics", "3d", "experimental"],
+      "defaultMain": "src/main.cpp",
+      "dependencies": ["nxdev.core", "nxdev.deko3d"]
+    }
+  ]
+}

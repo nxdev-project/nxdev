@@ -1,0 +1,17 @@
+schemaVersion: 1
+
+application:
+  titleId: "{{PROJECT_TITLE_ID}}"
+  name: "{{PROJECT_NAME}}"
+  author: "{{PROJECT_AUTHOR}}"
+  version: "{{PROJECT_VERSION}}"
+  description: "deko3d 3D Graphics Application"
+
+dependencies:
+  - nxdev.core
+  - nxdev.deko3d
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug

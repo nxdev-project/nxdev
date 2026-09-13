@@ -1,0 +1,2 @@
+Hello from NXDevPack RomFS!
+This file was packed directly into the .nro bundle using elf2nro.

@@ -1,0 +1,121 @@
+{
+  "name": "NSP Packaging Demo",
+  "title_id": "0x0100000000000088",
+  "program_id": "0x0100000000000088",
+  "program_id_range_min": "0x0100000000000088",
+  "program_id_range_max": "0x0100000000000088",
+  "main_thread_stack_size": "0x00040000",
+  "main_thread_priority": 44,
+  "default_cpu_id": 0,
+  "process_category": 0,
+  "is_64_bit": true,
+  "address_space_type": 1,
+  "system_resource_size": "0x00000000",
+  "version": "0x00010000",
+  "optimize_memory_allocation": false,
+  "disable_device_address_space_merge": false,
+  "enable_alias_region_extra_size": false,
+  "prevent_code_reads": false,
+  "signature_key_generation": 0,
+  "is_retail": false,
+  "pool_partition": 0,
+  "filesystem_access": {
+    "permissions": "0x0000000000000000"
+  },
+  "service_access": [
+    "*"
+  ],
+  "service_host": [],
+  "services": {
+    "sm:": false,
+    "bsds:u": false,
+    "acc:u": false,
+    "set": false,
+    "hid": false,
+    "fsp-srv": false,
+    "vi:u": false,
+    "appletOE": false,
+    "audren:u": false,
+    "audin:u": false,
+    "audout:u": false,
+    "time:u": false,
+    "psm": false,
+    "pl:u": false
+  },
+  "kernel_capabilities": [
+    {
+      "type": "kernel_flags",
+      "value": {
+        "highest_thread_priority": 63,
+        "lowest_thread_priority": 24,
+        "lowest_cpu_id": 0,
+        "highest_cpu_id": 3
+      }
+    },
+    {
+      "type": "syscalls",
+      "value": {
+        "svcSetHeapSize": 1,
+        "svcSetMemoryAttribute": 3,
+        "svcMapMemory": 4,
+        "svcUnmapMemory": 5,
+        "svcQueryMemory": 6,
+        "svcExitProcess": 7,
+        "svcCreateThread": 8,
+        "svcStartThread": 9,
+        "svcExitThread": 10,
+        "svcSleepThread": 11,
+        "svcGetThreadPriority": 12,
+        "svcSetThreadPriority": 13,
+        "svcGetThreadCoreMask": 14,
+        "svcSetThreadCoreMask": 15,
+        "svcGetCurrentProcessorNumber": 16,
+        "svcSignalEvent": 17,
+        "svcClearEvent": 18,
+        "svcCreateInterruptEvent": 30,
+        "svcMapSharedMemory": 19,
+        "svcUnmapSharedMemory": 20,
+        "svcCreateTransferMemory": 21,
+        "svcCloseHandle": 22,
+        "svcResetSignal": 23,
+        "svcWaitSynchronization": 24,
+        "svcCancelSynchronization": 25,
+        "svcArbitrateLock": 26,
+        "svcArbitrateUnlock": 27,
+        "svcWaitProcessWideKeyAtomic": 28,
+        "svcSignalProcessWideKey": 29,
+        "svcGetSystemTick": 31,
+        "svcConnectToNamedPort": 32,
+        "svcSendSyncRequestLight": 33,
+        "svcSendSyncRequest": 34,
+        "svcSendSyncRequestWithUserBuffer": 35,
+        "svcSendAsyncRequestWithUserBuffer": 36,
+        "svcGetProcessId": 37,
+        "svcGetThreadId": 38,
+        "svcBreak": 39,
+        "svcOutputDebugString": 40,
+        "svcReturnFromException": 41,
+        "svcGetInfo": 43,
+        "svcWaitForAddress": 52,
+        "svcSignalToAddress": 53,
+        "svcSynchronizePreemptionState": 90
+      }
+    },
+    {
+      "type": "min_kernel_version",
+      "value": "0x0030"
+    },
+    {
+      "type": "handle_table_size",
+      "value": 1023
+    },
+    {
+      "type": "debug_flags",
+      "value": {
+        "allow_debug": true,
+        "force_debug": false,
+        "force_debug_prod": false
+      }
+    }
+  ]
+}

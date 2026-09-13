@@ -5,7 +5,7 @@
 
 namespace nxdev::cli {
 
-int ManifestCommand::execute(std::span<const std::string> args) {
+int ManifestCommand::execute(std::span<const std::string> args, CommandContext& ctx) {
     if (args.empty()) {
         std::cout << "Usage: " << usage() << "\n\n";
         std::cout << "Subcommands:\n";
@@ -22,6 +22,8 @@ int ManifestCommand::execute(std::span<const std::string> args) {
         manifest::ParseResult result;
         if (args.size() > 1 && args[1].rfind("-", 0) != 0) {
             result = parser.parse_file(args[1]);
+        } else if (ctx.project.has_value()) {
+            result = parser.parse_file(ctx.project->manifest_path());
         } else {
             result = parser.load_from_discovery();
         }
@@ -50,6 +52,8 @@ int ManifestCommand::execute(std::span<const std::string> args) {
         manifest::ParseResult result;
         if (!path.empty()) {
             result = parser.parse_file(path);
+        } else if (ctx.project.has_value()) {
+            result = parser.parse_file(ctx.project->manifest_path());
         } else {
             result = parser.load_from_discovery();
         }

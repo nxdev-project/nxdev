@@ -1,0 +1,17 @@
+schemaVersion: 1
+
+application:
+  name: "Hello Switch"
+  author: "NXDev Team"
+  version: "1.0.0"
+  description: "Minimal Nintendo Switch homebrew console application built with NXDev and libnx"
+
+build:
+  language: cpp
+  standard: c++20
+  defaultProfile: debug
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true

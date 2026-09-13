@@ -1,0 +1,17 @@
+schemaVersion: 1
+
+application:
+  titleId: "{{PROJECT_TITLE_ID}}"
+  name: "{{PROJECT_NAME}}"
+  author: "{{PROJECT_AUTHOR}}"
+  version: "{{PROJECT_VERSION}}"
+  description: "SDL2 2D Graphics and Sound Application"
+
+dependencies:
+  - nxdev.core
+  - nxdev.sdl2
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug

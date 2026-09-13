@@ -1,0 +1,21 @@
+schemaVersion: 1
+
+application:
+  titleId: "0100000000009999"
+  name: "Smoke Test App"
+  author: "NXDev Team"
+  version: "0.1.0"
+  description: "End-to-End smoke test application for NXDev"
+
+assets:
+  romfs: romfs/
+
+dependencies:
+  - nxdev.core
+  - nxdev.input
+  - nxdev.filesystem
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug

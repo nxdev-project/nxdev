@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NXDevPackageRegistry",
+  "description": "Schema for the NXDev Package Registry describing supported built-in and external devkitPro SDK modules",
+  "type": "object",
+  "required": ["schema_version", "packages"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0", "1"]
+    },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "kind", "description"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^nxdev\\.[a-z0-9_\\-]+$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["builtin", "devkitpro", "meta"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["core", "input", "filesystem", "system", "graphics", "audio", "networking", "fonts", "compression", "data", "media"]
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "devkitpro": {
+            "type": "object",
+            "properties": {
+              "packages": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "cmake": {
+            "type": "object",
+            "properties": {
+              "targets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "libraries": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "license": {
+            "type": "string"
+          },
+          "upstream_url": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

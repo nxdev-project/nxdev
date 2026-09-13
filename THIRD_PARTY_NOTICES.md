@@ -15,10 +15,15 @@ NXDev interacts with and integrates external open-source tools and libraries fro
    - **License**: ISC / zlib / GPLv2+ (per component)
    - **Notice**: NXDev does not replace libnx or the devkitPro toolchains; it builds upon them as abstraction and orchestration layers.
 
-2. **hacBrewPack (Planned integration in `third_party/hacbrewpack`)**
+2. **devkitPro Portlib Ecosystem Libraries**
+   - NXDev allows optional integration with official devkitPro portlib packages (`switch-sdl2`, `switch-sdl2_image`, `switch-sdl2_mixer`, `switch-sdl2_ttf`, `switch-curl`, `switch-mbedtls`, `switch-freetype`, `switch-libopus`, `switch-zlib`, `switch-libpng`, `switch-libjpeg-turbo`, `switch-libogg`, `switch-libvorbis`, `switch-physfs`, `deko3d`).
+   - These libraries are distributed by devkitPro and licensed under their respective open-source licenses (zlib, MIT, Apache 2.0, BSD-style, etc.).
+
+3. **hacBrewPack (Bundled in `third_party/hacbrewpack`)**
    - **Upstream**: [The-4n/hacBrewPack](https://github.com/The-4n/hacBrewPack)
-   - **License**: ISC License / GPL
-   - **Notice**: When integrated in `third_party/hacbrewpack/`, all upstream licenses, notices, and attribution will be strictly preserved in that subdirectory.
+   - **Pinned Version**: 3.05 (Commit `5c34cb2f57564d6db53d3ea7e204c3a7263b6555`)
+   - **License**: ISC License (Copyright (c) 2018 The-4n)
+   - **Notice**: Preserved in `third_party/hacbrewpack/LICENSE` and `third_party/hacbrewpack/README-NXDEV.md`. Built as `nxdev_hacbrewpack`.
 
 ## Strict Policy on Proprietary Nintendo Material
 

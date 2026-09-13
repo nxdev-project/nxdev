@@ -2,22 +2,378 @@
   "schema_version": "1.0",
   "packages": [
     {
-      "name": "switch-sdl2",
-      "description": "Simple DirectMedia Layer 2 for Nintendo Switch",
-      "devkitpro_package": "switch-sdl2",
-      "cmake_target": "SDL2::SDL2"
+      "id": "nxdev.core",
+      "name": "NXDev Core SDK",
+      "description": "Foundational C++ abstraction layer on top of libnx for Nintendo Switch homebrew",
+      "kind": "builtin",
+      "category": "core",
+      "dependencies": [],
+      "cmake": {
+        "targets": ["NXDev::Core"],
+        "headers": ["nxdev/nxdev.hpp", "nxdev/app.hpp", "nxdev/result.hpp", "nxdev/log.hpp"]
+      },
+      "license": "MIT"
     },
     {
-      "name": "switch-glad",
-      "description": "OpenGL loader generator for Nintendo Switch",
-      "devkitpro_package": "switch-glad",
-      "cmake_target": "glad::glad"
+      "id": "nxdev.input",
+      "name": "NXDev Input",
+      "description": "Multi-player controller, handheld Joy-Con, button transitions, and multi-touch input",
+      "kind": "builtin",
+      "category": "input",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Input"],
+        "headers": ["nxdev/input.hpp"]
+      },
+      "license": "MIT"
     },
     {
-      "name": "switch-curl",
-      "description": "Command line tool and library for transferring data with URLs",
-      "devkitpro_package": "switch-curl",
-      "cmake_target": "CURL::libcurl"
+      "id": "nxdev.filesystem",
+      "name": "NXDev Filesystem",
+      "description": "RomFS mounting/unmounting RAII guard, SD card paths, and robust safe file I/O",
+      "kind": "builtin",
+      "category": "filesystem",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Filesystem"],
+        "headers": ["nxdev/filesystem.hpp"]
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "nxdev.account",
+      "name": "NXDev Account",
+      "description": "Horizon OS user account discovery, 128-bit UID handling, and profile nickname metadata",
+      "kind": "builtin",
+      "category": "system",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Account"],
+        "headers": ["nxdev/account.hpp"]
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "nxdev.network",
+      "name": "NXDev Network",
+      "description": "BSD socket driver lifecycle management, IP discovery, and network status queries",
+      "kind": "builtin",
+      "category": "networking",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Network"],
+        "headers": ["nxdev/network.hpp"]
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "nxdev.time",
+      "name": "NXDev Time",
+      "description": "High-precision monotonic clock, 19.2MHz ARM hardware ticks, and calendar DateTime",
+      "kind": "builtin",
+      "category": "system",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Time"],
+        "headers": ["nxdev/time.hpp"]
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "nxdev.power",
+      "name": "NXDev Power",
+      "description": "Operation mode (Handheld/Docked), battery percentage/charging info, and applet event hooks",
+      "kind": "builtin",
+      "category": "system",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Power"],
+        "headers": ["nxdev/power.hpp"]
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "nxdev.display",
+      "name": "NXDev Display",
+      "description": "Console and basic display facilities for Nintendo Switch homebrew",
+      "kind": "builtin",
+      "category": "graphics",
+      "dependencies": ["nxdev.core"],
+      "cmake": {
+        "targets": ["NXDev::Display"],
+        "headers": ["nxdev/display.hpp"]
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "nxdev.sdl2",
+      "name": "SDL2",
+      "description": "Simple DirectMedia Layer 2 cross-platform multimedia library for Nintendo Switch",
+      "kind": "devkitpro",
+      "category": "graphics",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["switch-sdl2"]
+      },
+      "cmake": {
+        "targets": ["NXDev::SDL2"],
+        "headers": ["SDL2/SDL.h"],
+        "libraries": ["libSDL2.a"]
+      },
+      "license": "zlib",
+      "upstream_url": "https://www.libsdl.org/"
+    },
+    {
+      "id": "nxdev.sdl2-image",
+      "name": "SDL2 Image",
+      "description": "Image loading library supporting PNG, JPEG, GIF, WebP, and BMP for SDL2",
+      "kind": "devkitpro",
+      "category": "graphics",
+      "dependencies": ["nxdev.sdl2"],
+      "devkitpro": {
+        "packages": ["switch-sdl2_image"]
+      },
+      "cmake": {
+        "targets": ["NXDev::SDL2Image"],
+        "headers": ["SDL2/SDL_image.h"],
+        "libraries": ["libSDL2_image.a"]
+      },
+      "license": "zlib",
+      "upstream_url": "https://github.com/libsdl-org/SDL_image"
+    },
+    {
+      "id": "nxdev.sdl2-mixer",
+      "name": "SDL2 Mixer",
+      "description": "Multi-channel audio playback and mixing library supporting WAV, MP3, OGG, FLAC, and MOD",
+      "kind": "devkitpro",
+      "category": "audio",
+      "dependencies": ["nxdev.sdl2"],
+      "devkitpro": {
+        "packages": ["switch-sdl2_mixer"]
+      },
+      "cmake": {
+        "targets": ["NXDev::SDL2Mixer"],
+        "headers": ["SDL2/SDL_mixer.h"],
+        "libraries": ["libSDL2_mixer.a"]
+      },
+      "license": "zlib",
+      "upstream_url": "https://github.com/libsdl-org/SDL_mixer"
+    },
+    {
+      "id": "nxdev.sdl2-ttf",
+      "name": "SDL2 TTF",
+      "description": "TrueType font rendering library for SDL2 applications",
+      "kind": "devkitpro",
+      "category": "fonts",
+      "dependencies": ["nxdev.sdl2", "nxdev.freetype"],
+      "devkitpro": {
+        "packages": ["switch-sdl2_ttf"]
+      },
+      "cmake": {
+        "targets": ["NXDev::SDL2TTF"],
+        "headers": ["SDL2/SDL_ttf.h"],
+        "libraries": ["libSDL2_ttf.a"]
+      },
+      "license": "zlib",
+      "upstream_url": "https://github.com/libsdl-org/SDL_ttf"
+    },
+    {
+      "id": "nxdev.deko3d",
+      "name": "deko3d",
+      "description": "Low-level, high-performance Vulkan-like 3D graphics API for Nintendo Switch Maxwell GPU",
+      "kind": "devkitpro",
+      "category": "graphics",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["deko3d"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Deko3D"],
+        "headers": ["deko3d.hpp", "deko3d.h"],
+        "libraries": ["libdeko3d.a"]
+      },
+      "license": "Zlib",
+      "upstream_url": "https://github.com/devkitPro/deko3d"
+    },
+    {
+      "id": "nxdev.curl",
+      "name": "libcurl",
+      "description": "Multiprotocol file transfer and HTTP/HTTPS client library",
+      "kind": "devkitpro",
+      "category": "networking",
+      "dependencies": ["nxdev.network", "nxdev.mbedtls", "nxdev.zlib"],
+      "devkitpro": {
+        "packages": ["switch-curl"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Curl"],
+        "headers": ["curl/curl.h"],
+        "libraries": ["libcurl.a"]
+      },
+      "license": "curl",
+      "upstream_url": "https://curl.se/"
+    },
+    {
+      "id": "nxdev.mbedtls",
+      "name": "mbedTLS",
+      "description": "Lightweight, modular SSL/TLS and cryptographic library",
+      "kind": "devkitpro",
+      "category": "networking",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["switch-mbedtls"]
+      },
+      "cmake": {
+        "targets": ["NXDev::MbedTLS"],
+        "headers": ["mbedtls/ssl.h"],
+        "libraries": ["libmbedtls.a", "libmbedcrypto.a", "libmbedx509.a"]
+      },
+      "license": "Apache-2.0",
+      "upstream_url": "https://github.com/Mbed-TLS/mbedtls"
+    },
+    {
+      "id": "nxdev.freetype",
+      "name": "FreeType",
+      "description": "High-quality, portable font engine for rasterizing glyphs",
+      "kind": "devkitpro",
+      "category": "fonts",
+      "dependencies": ["nxdev.png", "nxdev.zlib"],
+      "devkitpro": {
+        "packages": ["switch-freetype"]
+      },
+      "cmake": {
+        "targets": ["NXDev::FreeType"],
+        "headers": ["ft2build.h"],
+        "libraries": ["libfreetype.a"]
+      },
+      "license": "FTL / GPLv2",
+      "upstream_url": "https://freetype.org/"
+    },
+    {
+      "id": "nxdev.opus",
+      "name": "Opus",
+      "description": "Interactive audio and speech codec and opusfile container decoder",
+      "kind": "devkitpro",
+      "category": "audio",
+      "dependencies": ["nxdev.ogg"],
+      "devkitpro": {
+        "packages": ["switch-libopus", "switch-opusfile"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Opus"],
+        "headers": ["opus/opus.h", "opus/opusfile.h"],
+        "libraries": ["libopus.a", "libopusfile.a"]
+      },
+      "license": "BSD-3-Clause",
+      "upstream_url": "https://opus-codec.org/"
+    },
+    {
+      "id": "nxdev.zlib",
+      "name": "zlib",
+      "description": "Massively spiffy yet delicately unobtrusive compression library",
+      "kind": "devkitpro",
+      "category": "compression",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["switch-zlib"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Zlib"],
+        "headers": ["zlib.h"],
+        "libraries": ["libz.a"]
+      },
+      "license": "Zlib",
+      "upstream_url": "https://zlib.net/"
+    },
+    {
+      "id": "nxdev.png",
+      "name": "libpng",
+      "description": "Official Portable Network Graphics reference library",
+      "kind": "devkitpro",
+      "category": "graphics",
+      "dependencies": ["nxdev.zlib"],
+      "devkitpro": {
+        "packages": ["switch-libpng"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Png"],
+        "headers": ["png.h"],
+        "libraries": ["libpng.a"]
+      },
+      "license": "libpng-2.0",
+      "upstream_url": "http://www.libpng.org/pub/png/libpng.html"
+    },
+    {
+      "id": "nxdev.jpeg",
+      "name": "libjpeg-turbo",
+      "description": "High-speed SIMD-accelerated JPEG image codec",
+      "kind": "devkitpro",
+      "category": "graphics",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["switch-libjpeg-turbo"]
+      },
+      "cmake": {
+        "targets": ["NXDev::JpegTurbo"],
+        "headers": ["jpeglib.h"],
+        "libraries": ["libjpeg.a"]
+      },
+      "license": "IJG / BSD-3-Clause",
+      "upstream_url": "https://libjpeg-turbo.org/"
+    },
+    {
+      "id": "nxdev.ogg",
+      "name": "libogg",
+      "description": "Ogg bitstream container multimedia format library",
+      "kind": "devkitpro",
+      "category": "audio",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["switch-libogg"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Ogg"],
+        "headers": ["ogg/ogg.h"],
+        "libraries": ["libogg.a"]
+      },
+      "license": "BSD-3-Clause",
+      "upstream_url": "https://xiph.org/ogg/"
+    },
+    {
+      "id": "nxdev.vorbis",
+      "name": "libvorbis",
+      "description": "General purpose lossy audio and music compression codec",
+      "kind": "devkitpro",
+      "category": "audio",
+      "dependencies": ["nxdev.ogg"],
+      "devkitpro": {
+        "packages": ["switch-libvorbis"]
+      },
+      "cmake": {
+        "targets": ["NXDev::Vorbis"],
+        "headers": ["vorbis/codec.h"],
+        "libraries": ["libvorbis.a", "libvorbisfile.a"]
+      },
+      "license": "BSD-3-Clause",
+      "upstream_url": "https://xiph.org/vorbis/"
+    },
+    {
+      "id": "nxdev.physfs",
+      "name": "PhysicsFS",
+      "description": "Abstraction layer for archive and file system access (ZIP, 7z, ISO, etc.)",
+      "kind": "devkitpro",
+      "category": "filesystem",
+      "dependencies": ["nxdev.core"],
+      "devkitpro": {
+        "packages": ["switch-physfs"]
+      },
+      "cmake": {
+        "targets": ["NXDev::PhysFS"],
+        "headers": ["physfs.h"],
+        "libraries": ["libphysfs.a"]
+      },
+      "license": "zlib",
+      "upstream_url": "https://icculus.org/physfs/"
     }
   ]
 }

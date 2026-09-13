@@ -3,14 +3,29 @@
 
 namespace nxdev::cli {
 
-int VersionCommand::execute([[maybe_unused]] std::span<const std::string> args) {
+int VersionCommand::execute(std::span<const std::string> args, CommandContext& ctx) {
+    bool as_json = false;
+    for (const auto& a : args) {
+        if (a == "--json") as_json = true;
+    }
+
 #ifdef NXDEV_VERSION
-    std::cout << "NXDev CLI version " << NXDEV_VERSION << "\n";
+    std::string ver = NXDEV_VERSION;
 #else
-    std::cout << "NXDev CLI version 0.1.0-dev\n";
+    std::string ver = "0.1.0-dev";
 #endif
-    std::cout << "Target: Host (development build)\n";
-    std::cout << "Unofficial Nintendo Switch Homebrew Development Ecosystem\n";
+
+    if (as_json) {
+        std::cout << "{\n";
+        std::cout << "  \"version\": \"" << ver << "\",\n";
+        std::cout << "  \"host\": \"" << ctx.env.host().os_name() << " (" << ctx.env.host().arch_name() << ")\",\n";
+        std::cout << "  \"ecosystem\": \"NXDev Nintendo Switch Development Ecosystem\"\n";
+        std::cout << "}\n";
+    } else {
+        std::cout << "NXDev CLI version " << ver << "\n";
+        std::cout << "Host: " << ctx.env.host().os_name() << " (" << ctx.env.host().arch_name() << ")\n";
+        std::cout << "Unofficial Nintendo Switch Homebrew Development Ecosystem\n";
+    }
     return 0;
 }
 

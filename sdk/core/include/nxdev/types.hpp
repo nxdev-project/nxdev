@@ -20,9 +20,9 @@ struct Version {
     u32 major{0};
     u32 minor{1};
     u32 patch{0};
-    std::string_view prerelease{"dev"};
+    std::string_view prerelease{"beta.1"};
 };
 
-constexpr Version CURRENT_VERSION{0, 1, 0, "dev"};
+constexpr Version CURRENT_VERSION{0, 1, 0, "beta.1"};
 
 } // namespace nxdev
