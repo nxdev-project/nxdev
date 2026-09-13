@@ -15,7 +15,9 @@ echo "Output Directory: ${OUTPUT_DIR}"
 mkdir -p "${OUTPUT_DIR}"
 
 # Use nxdev sdk package command
-if [[ -x "${REPO_ROOT}/build/cli/nxdev" ]]; then
+if [[ -x "${REPO_ROOT}/build/bin/nxdev" ]]; then
+    "${REPO_ROOT}/build/bin/nxdev" sdk package --output "${OUTPUT_DIR}"
+elif [[ -x "${REPO_ROOT}/build/cli/nxdev" ]]; then
     "${REPO_ROOT}/build/cli/nxdev" sdk package --output "${OUTPUT_DIR}"
 elif command -v nxdev >/dev/null 2>&1; then
     nxdev sdk package --output "${OUTPUT_DIR}"
@@ -23,7 +25,11 @@ else
     echo "Building host CLI first..."
     cmake -S "${REPO_ROOT}" -B "${REPO_ROOT}/build" -DCMAKE_BUILD_TYPE=Release
     cmake --build "${REPO_ROOT}/build" --target nxdev -j"$(nproc)"
-    "${REPO_ROOT}/build/cli/nxdev" sdk package --output "${OUTPUT_DIR}"
+    if [[ -x "${REPO_ROOT}/build/bin/nxdev" ]]; then
+        "${REPO_ROOT}/build/bin/nxdev" sdk package --output "${OUTPUT_DIR}"
+    else
+        "${REPO_ROOT}/build/cli/nxdev" sdk package --output "${OUTPUT_DIR}"
+    fi
 fi
 
 cd "${OUTPUT_DIR}"
