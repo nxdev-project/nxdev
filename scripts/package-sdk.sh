@@ -23,8 +23,14 @@ elif command -v nxdev >/dev/null 2>&1; then
     nxdev sdk package --output "${OUTPUT_DIR}"
 else
     echo "Building host CLI first..."
-    cmake -S "${REPO_ROOT}" -B "${REPO_ROOT}/build" -DCMAKE_BUILD_TYPE=Release
-    cmake --build "${REPO_ROOT}/build" --target nxdev -j"$(nproc)"
+    MEM_AVAIL_KB=$(grep MemAvailable /proc/meminfo 2>/dev/null | awk '{print $2}' || echo "4194304")
+    CPUS=$(nproc 2>/dev/null || echo 2)
+    MEM_JOBS=$(( MEM_AVAIL_KB / 1572864 ))
+    [[ ${MEM_JOBS} -lt 1 ]] && MEM_JOBS=1
+    SAFE_JOBS=${CPUS}
+    [[ ${MEM_JOBS} -lt ${SAFE_JOBS} ]] && SAFE_JOBS=${MEM_JOBS}
+    [[ ${SAFE_JOBS} -lt 1 ]] && SAFE_JOBS=1
+    cmake --build "${REPO_ROOT}/build" --target nxdev --parallel "${SAFE_JOBS}"
     if [[ -x "${REPO_ROOT}/build/bin/nxdev" ]]; then
         "${REPO_ROOT}/build/bin/nxdev" sdk package --output "${OUTPUT_DIR}"
     else

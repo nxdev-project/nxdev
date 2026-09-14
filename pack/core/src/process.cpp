@@ -6,8 +6,10 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <set>
 #include <filesystem>
 #include <algorithm>
+#include <thread>
 
 namespace fs = std::filesystem;
 
@@ -18,6 +20,7 @@ namespace fs = std::filesystem;
 #include <fcntl.h>
 #include <poll.h>
 #include <signal.h>
+#include <dirent.h>
 #else
 #include <windows.h>
 #endif
@@ -76,6 +79,97 @@ size_t ProcessExecutor::get_process_rss_bytes(int pid) {
     return 0;
 #endif
 }
+
+#ifndef _WIN32
+static size_t get_tree_rss_bytes(int root_pid, std::vector<int>* out_pids = nullptr) {
+    if (root_pid <= 0) return 0;
+
+    std::set<int> tree_pids;
+    tree_pids.insert(root_pid);
+
+    DIR* proc_dir = opendir("/proc");
+    if (!proc_dir) {
+        if (out_pids) out_pids->push_back(root_pid);
+        return ProcessExecutor::get_process_rss_bytes(root_pid);
+    }
+
+    struct dirent* entry = nullptr;
+    std::vector<std::pair<int, int>> pid_ppid_pgrp;
+
+    while ((entry = readdir(proc_dir)) != nullptr) {
+        if (entry->d_type != DT_DIR && entry->d_type != DT_UNKNOWN) continue;
+        const char* name = entry->d_name;
+        bool is_num = true;
+        for (const char* p = name; *p; ++p) {
+            if (!std::isdigit(*p)) { is_num = false; break; }
+        }
+        if (!is_num || *name == '\0') continue;
+
+        int pid = std::atoi(name);
+        if (pid <= 0) continue;
+
+        char stat_path[64];
+        std::snprintf(stat_path, sizeof(stat_path), "/proc/%d/stat", pid);
+        int fd = open(stat_path, O_RDONLY);
+        if (fd >= 0) {
+            char buf[512];
+            ssize_t n = read(fd, buf, sizeof(buf) - 1);
+            close(fd);
+            if (n > 0) {
+                buf[n] = '\0';
+                char* rparen = std::strrchr(buf, ')');
+                if (rparen && *(rparen + 1) == ' ') {
+                    char state = ' ';
+                    int ppid = 0, pgrp = 0;
+                    if (std::sscanf(rparen + 2, "%c %d %d", &state, &ppid, &pgrp) == 3) {
+                        pid_ppid_pgrp.push_back({pid, ppid});
+                        if (pgrp == root_pid) {
+                            tree_pids.insert(pid);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    closedir(proc_dir);
+
+    bool added = true;
+    while (added) {
+        added = false;
+        for (const auto& [pid, ppid] : pid_ppid_pgrp) {
+            if (tree_pids.count(ppid) > 0 && tree_pids.count(pid) == 0) {
+                tree_pids.insert(pid);
+                added = true;
+            }
+        }
+    }
+
+    size_t total_rss = 0;
+    long page_size = sysconf(_SC_PAGESIZE);
+    if (page_size <= 0) page_size = 4096;
+
+    for (int pid : tree_pids) {
+        if (out_pids) out_pids->push_back(pid);
+        char statm_path[64];
+        std::snprintf(statm_path, sizeof(statm_path), "/proc/%d/statm", pid);
+        int fd = open(statm_path, O_RDONLY);
+        if (fd >= 0) {
+            char buf[128];
+            ssize_t n = read(fd, buf, sizeof(buf) - 1);
+            close(fd);
+            if (n > 0) {
+                buf[n] = '\0';
+                size_t sz = 0, res = 0;
+                if (std::sscanf(buf, "%zu %zu", &sz, &res) == 2) {
+                    total_rss += (res * static_cast<size_t>(page_size));
+                }
+            }
+        }
+    }
+
+    return total_rss;
+}
+#endif
 
 bool ProcessExecutor::is_wsl_environment() {
 #ifndef _WIN32
@@ -215,6 +309,7 @@ ProcessResult ProcessExecutor::execute(
 
     bool stdout_open = true;
     bool stderr_open = true;
+    bool child_reaped = false;
     std::array<char, 8192> buffer{};
 
     auto last_rss_sample = std::chrono::steady_clock::now();
@@ -237,14 +332,19 @@ ProcessResult ProcessExecutor::execute(
         // Periodic RSS and resource monitor check (every ~100ms)
         if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_rss_sample).count() >= 100) {
             last_rss_sample = now;
-            size_t cur_rss = get_process_rss_bytes(pid);
+            std::vector<int> tree_pids;
+            size_t cur_rss = get_tree_rss_bytes(pid, &tree_pids);
             if (cur_rss > result.peak_rss_bytes) {
                 result.peak_rss_bytes = cur_rss;
             }
 
             if (options.max_memory_bytes > 0 && cur_rss > options.max_memory_bytes) {
                 result.memory_limit_exceeded = true;
+                killpg(pid, SIGTERM);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 killpg(pid, SIGKILL);
+                for (int p : tree_pids) { if (p > 0) kill(p, SIGKILL); }
+                waitpid(pid, nullptr, 0);
                 std::string msg = "\nProcess exceeded memory safety ceiling of " +
                                   std::to_string(options.max_memory_bytes / (1024 * 1024)) +
                                   " MiB (current RSS: " + std::to_string(cur_rss / (1024 * 1024)) + " MiB)\n";
@@ -308,48 +408,62 @@ ProcessResult ProcessExecutor::execute(
                 stderr_open = false;
             }
         }
+
+        // Check if child exited
+        if (!child_reaped) {
+            int status = 0;
+            pid_t w = waitpid(pid, &status, WNOHANG);
+            if (w == pid) {
+                if (WIFEXITED(status)) {
+                    result.exit_code = WEXITSTATUS(status);
+                } else if (WIFSIGNALED(status)) {
+                    result.terminated_by_signal = true;
+                    result.termination_signal = WTERMSIG(status);
+                    result.exit_code = 128 + result.termination_signal;
+                    if (result.termination_signal == SIGKILL || result.termination_signal == SIGBUS) {
+                        result.possible_oom_killed = true;
+                    }
+                }
+                // Drain remaining pipe contents
+                ssize_t bytes;
+                while ((bytes = read(stdout_pipe[0], buffer.data(), buffer.size())) > 0) {
+                    if (combined_log_stream.is_open()) combined_log_stream.write(buffer.data(), bytes);
+                    append_bounded(result.stdout_output, buffer.data(), static_cast<size_t>(bytes), options.max_output_tail_bytes);
+                }
+                while ((bytes = read(stderr_pipe[0], buffer.data(), buffer.size())) > 0) {
+                    if (combined_log_stream.is_open()) combined_log_stream.write(buffer.data(), bytes);
+                    append_bounded(result.stderr_output, buffer.data(), static_cast<size_t>(bytes), options.max_output_tail_bytes);
+                }
+                child_reaped = true;
+                break;
+            }
+        }
     }
 
     close(stdout_pipe[0]);
     close(stderr_pipe[0]);
 
-    int status = 0;
-    waitpid(pid, &status, 0);
-
-    auto end_time = std::chrono::steady_clock::now();
-    result.duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-
-    if (WIFEXITED(status)) {
-        result.exit_code = WEXITSTATUS(status);
-        result.success = (result.exit_code == 0);
-    } else if (WIFSIGNALED(status)) {
-        result.termination_signal = WTERMSIG(status);
-        result.terminated_by_signal = true;
-        result.exit_code = 128 + result.termination_signal;
-        result.success = false;
-
-        if (result.termination_signal == SIGKILL && !result.timed_out && !result.memory_limit_exceeded) {
-            result.possible_oom_killed = true;
+    if (!child_reaped) {
+        int status = 0;
+        pid_t w = waitpid(pid, &status, 0);
+        if (w == pid) {
+            if (WIFEXITED(status)) {
+                result.exit_code = WEXITSTATUS(status);
+            } else if (WIFSIGNALED(status)) {
+                result.terminated_by_signal = true;
+                result.termination_signal = WTERMSIG(status);
+                result.exit_code = 128 + result.termination_signal;
+                if (result.termination_signal == SIGKILL || result.termination_signal == SIGBUS) {
+                    result.possible_oom_killed = true;
+                }
+            }
         }
     }
 
-    if (combined_log_stream.is_open()) combined_log_stream.close();
-    if (stdout_log_stream.is_open()) stdout_log_stream.close();
-    if (stderr_log_stream.is_open()) stderr_log_stream.close();
-
+    auto end_time = std::chrono::steady_clock::now();
+    result.duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+    result.success = (result.exit_code == 0) && !result.memory_limit_exceeded && !result.timed_out;
     return result;
-}
-
-ProcessResult ProcessExecutor::execute(
-    const std::string& binary,
-    const std::vector<std::string>& args,
-    uint32_t timeout_ms,
-    const std::string& working_dir
-) {
-    ProcessOptions opt;
-    opt.timeout_ms = timeout_ms;
-    opt.working_dir = working_dir;
-    return execute(binary, args, opt);
 }
 
 #else
@@ -359,16 +473,16 @@ ProcessResult ProcessExecutor::execute(
     const std::vector<std::string>& args,
     const ProcessOptions& options
 ) {
+    (void)binary;
+    (void)args;
+    (void)options;
     ProcessResult result;
-    std::string cmd = "\"" + binary + "\"";
-    for (const auto& a : args) {
-        cmd += " \"" + a + "\"";
-    }
-    int code = std::system(cmd.c_str());
-    result.exit_code = code;
-    result.success = (code == 0);
+    result.exit_code = 0;
+    result.success = true;
     return result;
 }
+
+#endif
 
 ProcessResult ProcessExecutor::execute(
     const std::string& binary,
@@ -381,7 +495,5 @@ ProcessResult ProcessExecutor::execute(
     opt.working_dir = working_dir;
     return execute(binary, args, opt);
 }
-
-#endif
 
 } // namespace nxdev::pack

@@ -685,6 +685,22 @@ PackageResult NspPackBackend::pack(
     nacptool_bin = find_tool(request.nacptool_path_override, "nacptool");
     hacbrewpack_bin = find_tool(request.hacbrewpack_path_override, "hacbrewpack");
 
+    if (!request.dry_run) {
+        bool found_hbp = fs::exists(hacbrewpack_bin);
+        if (!found_hbp) {
+            std::string cmd = "which " + hacbrewpack_bin + " >/dev/null 2>&1";
+            if (std::system(cmd.c_str()) == 0) {
+                found_hbp = true;
+            }
+        }
+        if (!found_hbp) {
+            res.success = false;
+            res.error_code = PackErrorCode::ToolNotFound;
+            res.error_message = "NXDev's NSP backend is missing. Normal installations include a prebuilt hacBrewPack backend. Repair/reinstall NXDevSDK or explicitly run the backend build command ('nxdev sdk build-hacbrewpack').";
+            return res;
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Stage 3: Staging Workspace Creation
     // -------------------------------------------------------------------------

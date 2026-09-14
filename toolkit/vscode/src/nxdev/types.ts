@@ -119,8 +119,14 @@ export interface BuildResult {
   status: 'success' | 'error';
   profile: string;
   artifact: string;
-  fileSizeBytes: number;
+  fileSizeBytes?: number;
+  peakMemoryBytes?: number;
+  durationMs?: number;
+  jobs?: number;
+  resourceController?: string;
+  resourceLimited?: boolean;
   logs?: string[];
+  diagnostics?: string[];
   error?: {
     code: string;
     message: string;

@@ -60,6 +60,13 @@ nxdev_configure_target(test_packages)
 add_test(NAME PackageSubsystemTest COMMAND test_packages)
 set_tests_properties(PackageSubsystemTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
+add_executable(test_resource_control unit/test_resource_control.cpp)
+target_link_libraries(test_resource_control PRIVATE NXDev::CLI)
+target_compile_definitions(test_resource_control PRIVATE NXDEV_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+nxdev_configure_target(test_resource_control)
+add_test(NAME ResourceControlTest COMMAND test_resource_control)
+set_tests_properties(ResourceControlTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
 add_executable(test_device test_device.cpp)
 target_link_libraries(test_device PRIVATE NXDev::CLI)
 target_compile_definitions(test_device PRIVATE NXDEV_SOURCE_DIR="${CMAKE_SOURCE_DIR}")

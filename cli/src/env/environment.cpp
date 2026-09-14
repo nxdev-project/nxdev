@@ -1,5 +1,7 @@
 #include <nxdev/env/environment.hpp>
 #include <nxdev/exec/process.hpp>
+#include <nxdev/exec/resource_calculator.hpp>
+#include <nxdev/exec/controlled_runner.hpp>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -447,6 +449,18 @@ std::string Environment::to_json(const std::optional<project::NXDevProject>& cur
     oss << "  },\n";
 
     oss << "  \"project\": " << (current_project.has_value() ? current_project->info_json() : "null") << ",\n";
+
+    exec::MemoryInfo mem = exec::ResourceCalculator::detect_memory();
+    exec::ControllerType ctl = exec::ControlledProcessRunner::detect_best_controller();
+    std::string ctl_str = (ctl == exec::ControllerType::CgroupV2) ? "cgroup-v2" : "process-tree-monitor";
+
+    oss << "  \"resources\": {\n";
+    oss << "    \"memoryTotal\": " << mem.total_bytes << ",\n";
+    oss << "    \"memoryAvailable\": " << mem.available_bytes << ",\n";
+    oss << "    \"swapTotal\": " << mem.swap_total_bytes << ",\n";
+    oss << "    \"controller\": \"" << ctl_str << "\",\n";
+    oss << "    \"canEnforceMemory\": " << (ctl != exec::ControllerType::None ? "true" : "false") << "\n";
+    oss << "  },\n";
 
     oss << "  \"tools\": {\n";
     size_t tool_idx = 0;

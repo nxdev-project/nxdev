@@ -1,5 +1,6 @@
 #include <nxdev/cli/commands.hpp>
 #include <nxdev/build/build_orchestrator.hpp>
+#include <nxdev/exec/resource_policy.hpp>
 #include <iostream>
 
 namespace nxdev::cli {
@@ -40,6 +41,16 @@ int BuildCommand::execute(std::span<const std::string> args, CommandContext& ctx
             if (i + 1 < args.size()) {
                 options.parallel_jobs = std::stoul(args[++i]);
             }
+        } else if (args[i] == "--max-memory" && i + 1 < args.size()) {
+            std::string mem_str = args[++i];
+            auto parsed = exec::parse_memory_size_string(mem_str);
+            if (!parsed.has_value()) {
+                std::cerr << "error: invalid --max-memory value '" << mem_str << "'. Examples: 512M, 2G, 4096M, auto, unlimited.\n";
+                return 1;
+            }
+            options.max_memory_bytes = *parsed;
+        } else if (args[i] == "--unsafe-no-resource-limits") {
+            options.unsafe_no_limits = true;
         } else if (args[i] == "--json") {
             json_mode = true;
         }
@@ -71,10 +82,20 @@ int BuildCommand::execute(std::span<const std::string> args, CommandContext& ctx
             if (!res.compile_commands_path.empty()) {
                 std::cout << "Compile commands: " << res.compile_commands_path << "\n";
             }
+            if (options.verbose && res.peak_memory_bytes > 0) {
+                std::cout << "Peak Memory: " << exec::format_bytes(res.peak_memory_bytes) << "\n"
+                          << "Duration:    " << res.duration_ms << " ms\n";
+            }
         } else {
             std::cerr << "\n[x] Build failed (exit code " << res.exit_code << ").\n";
             for (const auto& diag : res.diagnostics) {
                 std::cerr << "  - " << diag << "\n";
+            }
+            if (res.resource_limit_exceeded) {
+                std::cerr << "\nAction suggestions:\n"
+                          << "  - Reduce build parallelism with '--jobs 1'\n"
+                          << "  - Review configured limit with '--max-memory <size>'\n"
+                          << "  - Inspect WSL memory allocation in /etc/wsl.conf or .wslconfig if needed\n";
             }
         }
     }

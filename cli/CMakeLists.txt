@@ -1,6 +1,8 @@
 # NXDev CLI CMakeLists.txt
 
 add_library(nxdev_cli_lib STATIC
+    src/exec/resource_calculator.cpp
+    src/exec/controlled_runner.cpp
     src/exec/process.cpp
     src/env/host_info.cpp
     src/env/toolchain_info.cpp

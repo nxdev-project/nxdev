@@ -86,9 +86,25 @@ export class BuildCommands {
             this.output.info(`Build successful! Artifact: ${artifact}`);
             vscode.window.showInformationMessage(`Build succeeded for ${project.info?.name || 'Project'} [${profile}]`);
           } else {
-            const errMsg = json?.error?.message || 'Compilation failed';
-            this.output.error(`Build failed: ${errMsg}`);
-            vscode.window.showErrorMessage(`Build failed. See NXDev Output for details.`);
+            if (json?.resourceLimited) {
+              const peakMb = json.peakMemoryBytes ? `${(json.peakMemoryBytes / (1024 * 1024)).toFixed(1)} MiB` : 'unknown';
+              this.output.error(`Build stopped to protect WSL from memory exhaustion (Peak memory: ${peakMb}).`);
+              vscode.window.showErrorMessage(
+                `Build stopped to protect WSL from memory exhaustion. Peak memory: ${peakMb}`,
+                'Open Build Log',
+                'Open Resource Settings'
+              ).then((action) => {
+                if (action === 'Open Build Log') {
+                  this.output.show();
+                } else if (action === 'Open Resource Settings') {
+                  vscode.commands.executeCommand('workbench.action.openSettings', 'nxdev');
+                }
+              });
+            } else {
+              const errMsg = json?.error?.message || (json?.diagnostics && json.diagnostics.length > 0 ? json.diagnostics[0] : 'Compilation failed');
+              this.output.error(`Build failed: ${errMsg}`);
+              vscode.window.showErrorMessage(`Build failed. See NXDev Output for details.`);
+            }
           }
         }
       );

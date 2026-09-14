@@ -1,10 +1,14 @@
 #include <nxdev/cli/commands.hpp>
 #include <nxdev/exec/process.hpp>
+#include <nxdev/exec/resource_policy.hpp>
+#include <nxdev/exec/resource_calculator.hpp>
+#include <nxdev/exec/controlled_runner.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
 #include <iomanip>
+#include <thread>
 
 namespace fs = std::filesystem;
 
@@ -282,10 +286,11 @@ echo "  nxdev doctor"
 int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) {
     if (args.empty() || args[0] == "-h" || args[0] == "--help") {
         std::cout << "Usage: nxdev sdk <subcommand> [options]\n\n"
-                  << "Inspect or package the NXDevSDK distribution archive.\n\n"
+                  << "Inspect or package the NXDevSDK distribution archive, or build third-party backends.\n\n"
                   << "Subcommands:\n"
-                  << "  info       Display detected NXDevSDK location, version, and metadata\n"
-                  << "  package    Build distributable NXDevSDK.zip archive\n";
+                  << "  info                 Display detected NXDevSDK location, version, and metadata\n"
+                  << "  package              Build distributable NXDevSDK.zip archive\n"
+                  << "  build-hacbrewpack     Build hacBrewPack NSP packaging backend with resource limits\n";
         return 0;
     }
 
@@ -508,6 +513,138 @@ int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) 
             std::cerr << c_red("Error: ") << "SDK packaging failed: " << e.what() << "\n";
             return 1;
         }
+    }
+
+    if (subcmd == "build-hacbrewpack") {
+        size_t max_memory = 0;
+        uint32_t jobs = 1;
+        bool unsafe = false;
+        bool verbose = ctx.verbose;
+
+        for (size_t i = 1; i < args.size(); ++i) {
+            if (args[i] == "--max-memory" && i + 1 < args.size()) {
+                auto parsed = exec::parse_memory_size_string(args[++i]);
+                if (!parsed.has_value()) {
+                    std::cerr << "Error: Invalid --max-memory value '" << args[i] << "'. Examples: 512M, 2G, 4096M, auto, unlimited.\n";
+                    return 1;
+                }
+                max_memory = *parsed;
+            } else if ((args[i] == "--jobs" || args[i] == "-j") && i + 1 < args.size()) {
+                jobs = std::stoul(args[++i]);
+            } else if (args[i] == "--verbose" || args[i] == "-v") {
+                verbose = true;
+            } else if (args[i] == "--unsafe-no-resource-limits") {
+                unsafe = true;
+            }
+        }
+
+        // Locate repository root
+        fs::path repo_root;
+        fs::path p = fs::current_path();
+        for (int i = 0; i < 4 && p != p.root_path(); ++i) {
+            if (fs::exists(p / "third_party" / "hacbrewpack" / "CMakeLists.txt")) {
+                repo_root = p;
+                break;
+            }
+            p = p.parent_path();
+        }
+
+        if (repo_root.empty()) {
+            std::cerr << c_red("Error: ") << "Cannot locate third_party/hacbrewpack source tree.\n";
+            return 1;
+        }
+
+        exec::MemoryInfo mem = exec::ResourceCalculator::detect_memory();
+        size_t reserve = exec::ResourceCalculator::compute_host_reserve(mem);
+        size_t budget = exec::ResourceCalculator::compute_safe_memory_budget(
+            exec::WorkloadType::BuildThirdPartyBackend,
+            mem,
+            max_memory
+        );
+
+        if (budget < exec::ResourceCalculator::MINIMUM_VIABLE_BUILD_BUDGET && !unsafe) {
+            std::cerr << c_red("Error: ") << "Not enough safe memory is currently available to build hacBrewPack.\n"
+                      << "  Available: " << exec::format_bytes(mem.available_bytes) << "\n"
+                      << "  Reserved:  " << exec::format_bytes(reserve) << "\n"
+                      << "  Safe build budget: " << exec::format_bytes(budget) << "\n\n"
+                      << "NXDev will not start the backend compiler because it could destabilize WSL.\n";
+            return 1;
+        }
+
+        bool was_clamped = false;
+        uint32_t effective_jobs = exec::ResourceCalculator::compute_safe_job_count(
+            exec::WorkloadType::BuildThirdPartyBackend,
+            mem,
+            budget,
+            jobs,
+            unsafe,
+            &was_clamped
+        );
+
+        exec::ResourceCalculator::sanitize_environment(effective_jobs);
+
+        if (verbose) {
+            std::cout << "Build resource policy:\n"
+                      << "  Platform:           " << (mem.is_wsl ? "WSL2" : "Linux / Host") << "\n"
+                      << "  CPUs visible:       " << std::thread::hardware_concurrency() << "\n"
+                      << "  Memory visible:     " << exec::format_bytes(mem.total_bytes) << "\n"
+                      << "  Memory available:   " << exec::format_bytes(mem.available_bytes) << "\n"
+                      << "  Reserved:           " << exec::format_bytes(reserve) << "\n"
+                      << "  Build memory limit: " << exec::format_bytes(budget) << "\n"
+                      << "  Compile jobs:       " << effective_jobs << "\n"
+                      << "  Link jobs:          1\n\n";
+        }
+
+        fs::path build_dir = repo_root / "build";
+        fs::create_directories(build_dir);
+
+        // 1. Configure
+        std::cout << "==> Configuring hacBrewPack backend build...\n";
+        std::vector<std::string> cfg_args = {
+            "-S", repo_root.string(),
+            "-B", build_dir.string(),
+            "-DCMAKE_BUILD_TYPE=Release"
+        };
+        auto cfg_res = exec::ProcessExecutor::execute("cmake", cfg_args, 60000, repo_root.string());
+        if (!cfg_res.success) {
+            std::cerr << c_red("Error: ") << "CMake configuration failed for hacBrewPack: " << cfg_res.stderr_output << "\n";
+            return 1;
+        }
+
+        // 2. Build with resource limits
+        std::cout << "==> Compiling hacBrewPack (jobs=" << effective_jobs << ", memory limit=" << exec::format_bytes(budget) << ")...\n";
+        exec::ProcessResourcePolicy policy;
+        policy.workload = exec::WorkloadType::BuildThirdPartyBackend;
+        policy.max_memory_bytes = budget;
+        policy.min_host_memory_reserve_bytes = reserve;
+        policy.timeout_ms = 300000;
+        policy.working_dir = repo_root.string();
+        policy.unsafe_no_limits = unsafe;
+
+        std::vector<std::string> bld_args = {
+            "--build", build_dir.string(),
+            "--target", "nxdev_hacbrewpack",
+            "--parallel", std::to_string(effective_jobs)
+        };
+
+        auto bld_res = exec::ControlledProcessRunner::execute("cmake", bld_args, policy);
+        if (!bld_res.success) {
+            if (bld_res.resource_limit_exceeded) {
+                std::cerr << "\n" << c_red("hacBrewPack backend build stopped by NXDev.") << "\n\n"
+                          << "Reason:\n  " << exec::resource_limit_reason_to_string(bld_res.resource_limit_reason) << "\n\n"
+                          << "Peak RSS:\n  " << exec::format_bytes(bld_res.peak_rss_bytes) << "\n\n"
+                          << "Configured limit:\n  " << exec::format_bytes(budget) << "\n\n"
+                          << "This build was terminated before it could exhaust WSL memory.\n";
+            } else {
+                std::cerr << c_red("Error: ") << "hacBrewPack build failed with exit code " << bld_res.exit_code << "\n"
+                          << bld_res.stderr_output << "\n";
+            }
+            return 1;
+        }
+
+        std::cout << c_green("✓") << " hacBrewPack built successfully! (Peak RSS: " << exec::format_bytes(bld_res.peak_rss_bytes)
+                  << ", Duration: " << bld_res.duration_ms << " ms)\n";
+        return 0;
     }
 
     std::cerr << "Error: Unknown sdk subcommand '" << subcmd << "'. See 'nxdev sdk --help'.\n";

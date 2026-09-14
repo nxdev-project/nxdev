@@ -4,6 +4,8 @@
 #include <nxdev/pack/nro_backend.hpp>
 #include <nxdev/pack/nsp_backend.hpp>
 #include <nxdev/device/device_manager.hpp>
+#include <nxdev/exec/resource_calculator.hpp>
+#include <nxdev/exec/controlled_runner.hpp>
 #include <filesystem>
 #include <sstream>
 #include <iomanip>
@@ -85,6 +87,69 @@ void Doctor::run_diagnostics(
                 .remedy_suggestion = "For optimal build performance and I/O speed, consider placing projects inside the native WSL ext4 filesystem (e.g. ~/projects/)."
             });
         }
+    }
+
+    // 2.1. Host / WSL Resources Diagnostics
+    {
+        std::string res_cat = env.host().is_wsl ? "WSL Resources" : "Host Resources";
+        exec::MemoryInfo mem = exec::ResourceCalculator::detect_memory();
+        exec::ControllerType ctl = exec::ControlledProcessRunner::detect_best_controller();
+        size_t budget = exec::ResourceCalculator::compute_safe_memory_budget(exec::WorkloadType::BuildApplication, mem);
+        uint32_t app_jobs = exec::ResourceCalculator::compute_safe_job_count(exec::WorkloadType::BuildApplication, mem, budget);
+
+        add_check(CheckItem{
+            .id = "resources.memory.visible",
+            .category = res_cat,
+            .status = CheckStatus::Pass,
+            .message = "Visible memory: " + exec::format_bytes(mem.total_bytes),
+            .path = "",
+            .remedy_suggestion = ""
+        });
+
+        add_check(CheckItem{
+            .id = "resources.memory.available",
+            .category = res_cat,
+            .status = (mem.available_bytes >= 1024ULL * 1024 * 1024) ? CheckStatus::Pass : CheckStatus::Warning,
+            .message = "Available memory: " + exec::format_bytes(mem.available_bytes),
+            .path = "",
+            .remedy_suggestion = (mem.available_bytes < 1024ULL * 1024 * 1024) ? "Available memory is low. Close memory-intensive tasks before starting large builds." : ""
+        });
+
+        add_check(CheckItem{
+            .id = "resources.controller",
+            .category = res_cat,
+            .status = CheckStatus::Pass,
+            .message = "Resource controller: " + exec::controller_type_to_string(ctl),
+            .path = "",
+            .remedy_suggestion = ""
+        });
+
+        add_check(CheckItem{
+            .id = "resources.budget",
+            .category = res_cat,
+            .status = CheckStatus::Info,
+            .message = "Default build memory ceiling: " + exec::format_bytes(budget),
+            .path = "",
+            .remedy_suggestion = ""
+        });
+
+        add_check(CheckItem{
+            .id = "resources.jobs.app",
+            .category = res_cat,
+            .status = CheckStatus::Info,
+            .message = "Default application build jobs: " + std::to_string(app_jobs),
+            .path = "",
+            .remedy_suggestion = ""
+        });
+
+        add_check(CheckItem{
+            .id = "resources.jobs.hacbrewpack",
+            .category = res_cat,
+            .status = CheckStatus::Info,
+            .message = "hacBrewPack build jobs: 1",
+            .path = "",
+            .remedy_suggestion = ""
+        });
     }
 
     // 3. Project & Manifest Checks

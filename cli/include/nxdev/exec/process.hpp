@@ -1,24 +1,13 @@
 #pragma once
 
+#include <nxdev/exec/resource_policy.hpp>
+#include <nxdev/exec/resource_calculator.hpp>
+#include <nxdev/exec/controlled_runner.hpp>
 #include <string>
 #include <vector>
 #include <cstdint>
 
 namespace nxdev::exec {
-
-struct ProcessResult {
-    int exit_code{-1};
-    std::string stdout_output;
-    std::string stderr_output;
-    bool success{false};
-    bool timed_out{false};
-
-    [[nodiscard]] std::string combined_output() const {
-        if (stdout_output.empty()) return stderr_output;
-        if (stderr_output.empty()) return stdout_output;
-        return stdout_output + "\n" + stderr_output;
-    }
-};
 
 class ProcessExecutor {
 public:
@@ -26,7 +15,16 @@ public:
     ~ProcessExecutor() = default;
 
     /**
-     * @brief Executes a process using direct argument vector execution (no shell string expansion).
+     * @brief Executes a process with an explicit resource policy.
+     */
+    [[nodiscard]] static ProcessResult execute(
+        const std::string& binary,
+        const std::vector<std::string>& args,
+        const ProcessResourcePolicy& policy
+    );
+
+    /**
+     * @brief Executes a process using direct argument vector execution.
      * @param binary Path or executable name.
      * @param args Command line arguments vector.
      * @param timeout_ms Maximum time to wait in milliseconds.
