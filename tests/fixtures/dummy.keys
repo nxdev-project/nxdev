@@ -1,2 +1,7 @@
 # NXDev Automated Test Dummy Key File
 # This file is for automated integration testing only and contains NO proprietary Nintendo cryptographic materials.
+header_key = 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+key_area_key_application_00 = 0123456789abcdef0123456789abcdef
+key_area_key_application_01 = 0123456789abcdef0123456789abcdef
+key_area_key_ocean_00 = 0123456789abcdef0123456789abcdef
+key_area_key_system_00 = 0123456789abcdef0123456789abcdef

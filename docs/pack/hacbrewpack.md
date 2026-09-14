@@ -1,38 +1,41 @@
 # hacBrewPack Backend Integration
 
-NXDevPack delegates low-level NCA construction and PFS0 packaging to a bundled, pinned **hacBrewPack** backend adapter.
+NXDevPack delegates low-level NCA construction and PFS0 packaging to a bundled, pinned **gayhearts/hacBrewPack** backend adapter.
 
 ---
 
 ## 1. Upstream Metadata & License
 
-- **Upstream Project**: [The-4n/hacBrewPack](https://github.com/The-4n/hacBrewPack)
-- **Pinned Version**: `3.05`
-- **Pinned Commit**: `5c34cb2f57564d6db53d3ea7e204c3a7263b6555`
-- **License**: ISC License (see [third_party/hacbrewpack/LICENSE](file:///home/jvrcruz/Projects/NXDev/third_party/hacbrewpack/LICENSE))
+- **Upstream Project**: [gayhearts/hacBrewPack](https://github.com/gayhearts/hacBrewPack)
+- **Pinned Revision**: `1a5f378c1b5747c603f4a50a4a97d86cc7c05fd4`
+- **Version**: `3.17`
+- **License**: GPL-2.0 (see [third_party/hacbrewpack/LICENSE](file:///home/jvrcruz/Projects/NXDev/third_party/hacbrewpack/LICENSE))
 - **Build Target**: `nxdev_hacbrewpack` / `build/bin/hacbrewpack`
 
 ---
 
 ## 2. Architecture & Role
 
-`hacBrewPack` is treated as an internal implementation detail and toolchain provider. NXDev shields developers from low-level NCA / PFS0 layout by orchestrating:
+`hacBrewPack` is maintained as a native host-side tool integrated into NXDev. NXDev shields developers from low-level NCA / PFS0 layouts by orchestrating:
 
-1. Translating `nxapp.yaml` manifest configurations into standard staging directories (`exefs/`, `control/`, `romfs/`).
+1. Translating `nxapp.yaml` manifest configurations into standard staging directories (`backend/input/exefs/`, `backend/input/control/`).
 2. Generating NPDM descriptors for `npdmtool`.
 3. Generating NACP binaries for `nacptool`.
-4. Invoking `hacbrewpack` with CLI arguments:
+4. Staging and verifying 256x256 JPEG icons (with EXIF normalization).
+5. Validating RomFS boundaries to prevent recursion and cyclic symlink traversal.
+6. Invoking `hacbrewpack` with explicit paths and strict process/memory safeguards:
    ```text
-   hacbrewpack --titleid=<title_id> --keyfile=<keyfile> --exefsdir=<exefs> --controldir=<control> [--romfsdir=<romfs>] --outdir=<outdir>
+   hacbrewpack --titleid <title_id> --keyset <keyfile> --exefsdir <exefs_dir> --controldir <control_dir> --tempdir <temp_dir> --ncadir <nca_dir> --nspdir <nsp_dir> --backupdir <backup_dir> --nologo [--romfsdir <romfs_dir> | --noromfs]
    ```
-5. Verifying the resulting PFS0 container and copying the final `.nsp` to the `dist/` directory.
+7. Streaming stdout and stderr directly to `.nxdev/package/nsp/<profile>/logs/hacbrewpack.log` without unbounded memory buffering.
+8. Monitoring peak memory (RSS) and process group state, stopping runaway execution before host instability occurs.
+9. Verifying the resulting PFS0 container structure and atomically publishing the final `.nsp` to the `dist/` directory.
 
 ---
 
-## 3. Maintenance & Upgrades
+## 3. WSL Environment Execution
 
-To update the pinned version of `hacBrewPack`:
-
-1. Update `third_party/hacbrewpack/UPSTREAM` and `third_party/hacbrewpack/VERSION`.
-2. Ensure `CMakeLists.txt` builds cleanly for all supported host architectures (Linux x86_64/AArch64, macOS, Windows/WSL).
-3. Run the automated test suite: `ctest --test-dir build --output-on-failure`.
+When running under Windows Subsystem for Linux (WSL):
+- NXDev builds and executes the native Linux `hacBrewPack` executable.
+- NXDev never attempts to execute Windows `.exe` binaries inside WSL.
+- Memory usage is actively monitored relative to Linux-visible available memory.

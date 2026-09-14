@@ -62,6 +62,12 @@ nxdev pack nsp
 # Package with Release profile and custom output
 nxdev pack nsp --profile release -o out/MyApp.nsp
 
+# Retain staging and backend directories on success or failure for inspection
+nxdev pack nsp --keep-staging
+
+# Enable full verbose output including backend execution details
+nxdev pack nsp --debug-backend --verbose
+
 # Validate configuration without keys or building
 nxdev pack nsp --dry-run
 ```
@@ -70,22 +76,33 @@ nxdev pack nsp --dry-run
 
 ## 4. Staging Workspace Architecture
 
-NXDev creates an isolated staging workspace under `.nxdev/package/nsp/<profile>/`:
+NXDev creates an isolated, structured staging workspace under `.nxdev/package/nsp/<profile>/`:
 
 ```text
 .nxdev/package/nsp/debug/
 ├── generated/
-│   └── npdm.json         <- Generated NPDM descriptor
+│   └── npdm.json              <- Generated NPDM descriptor
 ├── staging/
 │   ├── exefs/
-│   │   ├── main          <- NSO binary compiled via elf2nso
-│   │   └── main.npdm     <- NPDM binary compiled via npdmtool
+│   │   ├── main               <- NSO binary compiled via elf2nso
+│   │   └── main.npdm          <- NPDM binary compiled via npdmtool
 │   ├── control/
-│   │   ├── control.nacp  <- NACP metadata compiled via nacptool
+│   │   ├── control.nacp       <- NACP metadata compiled via nacptool
 │   │   └── icon_AmericanEnglish.dat <- Staged 256x256 JPEG icon
-│   └── romfs/            <- Staged RomFS filesystem assets
-└── output/
-    └── 0100000000000088.nsp <- hacBrewPack assembled package
+│   └── romfs/                 <- Staged RomFS filesystem assets
+├── backend/
+│   ├── temp/                  <- hacBrewPack temporary scratch workspace
+│   ├── nca/                   <- Intermediate NCA containers
+│   └── nsp/                   <- Generated NSP output directory
+└── logs/
+    ├── hacbrewpack.log        <- Persistent per-run backend execution log
+    └── hacbrewpack-latest.log <- Latest execution log link
 ```
 
-The validated output is atomically published to `dist/<profile>/<application-name>.nsp`.
+### Execution & Publishing Workflow
+1. **Preflight Validation**: Validates all staged ExeFS, NPDM, NACP, and Icon inputs before invoking the backend.
+2. **Backend Execution**: Executes `hacbrewpack` in the isolated workspace with key paths sanitized in logs.
+3. **PFS0 Binary Validation**: Verifies the `PFS0` magic header and structural integrity of the generated `.nsp` file.
+4. **Atomic Publication**: Safely copies the verified `.nsp` into `dist/<profile>/<application-name>.nsp` (or custom `-o` path).
+5. **Persistent Logging**: Writes comprehensive execution metadata, command-line arguments (with keys redacted), input file hashes (SHA-256), duration, and stdout/stderr to `.nxdev/package/nsp/<profile>/logs/hacbrewpack.log`.
+

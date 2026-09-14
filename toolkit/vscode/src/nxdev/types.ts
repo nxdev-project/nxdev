@@ -128,6 +128,19 @@ export interface BuildResult {
   };
 }
 
+export interface BackendExecutionDetails {
+  name?: string;
+  revision?: string;
+  executable?: string;
+  stage?: string;
+  workingDir?: string;
+  logPath?: string;
+  stagingDir?: string;
+  exitCode?: number;
+  stdout?: string;
+  stderr?: string;
+}
+
 export interface PackResult {
   status: 'success' | 'error';
   format: 'nro' | 'nsp';
@@ -149,8 +162,10 @@ export interface PackResult {
   };
   error?: {
     code: string;
+    stage?: string;
     message: string;
     exitCode: number;
+    backend?: BackendExecutionDetails;
   };
   logs?: string[];
 }

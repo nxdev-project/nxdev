@@ -156,7 +156,28 @@ export class PackCommands {
               }
             } else {
               this.output.error(`NSP packaging failed: ${errMsg}`);
-              vscode.window.showErrorMessage(`NSP packaging failed: ${errMsg}`);
+              const actions: string[] = [];
+              const logPath = json?.error?.backend?.logPath;
+              const stagingDir = json?.error?.backend?.stagingDir;
+
+              if (logPath && fs.existsSync(logPath)) {
+                actions.push('Open Backend Log');
+              }
+              if (stagingDir && fs.existsSync(stagingDir)) {
+                actions.push('Open Staging Folder');
+              }
+              actions.push('Copy Error');
+
+              const selected = await vscode.window.showErrorMessage(`NSP packaging failed: ${errMsg}`, ...actions);
+              if (selected === 'Open Backend Log' && logPath) {
+                const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(logPath));
+                await vscode.window.showTextDocument(doc);
+              } else if (selected === 'Open Staging Folder' && stagingDir) {
+                vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(stagingDir));
+              } else if (selected === 'Copy Error') {
+                await vscode.env.clipboard.writeText(errMsg);
+                vscode.window.showInformationMessage('Error message copied to clipboard.');
+              }
             }
           }
         }

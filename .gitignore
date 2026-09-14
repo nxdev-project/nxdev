@@ -9,6 +9,18 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 
+# NXDev Runtime & Package Staging Directories
+.nxdev/
+**/.nxdev/
+hacbrewpack_temp/
+hacbrewpack_nca/
+hacbrewpack_nsp/
+hacbrewpack_backup/
+**/hacbrewpack_temp/
+**/hacbrewpack_nca/
+**/hacbrewpack_nsp/
+**/hacbrewpack_backup/
+
 # VS Code / Toolkit
 toolkit/vscode/node_modules/
 toolkit/vscode/out/
@@ -34,6 +46,21 @@ Testing/
 *.gcno
 *.gcov
 coverage/
+*.log
+*.tmp
+*.tmp.*
+
+# Keys & Cryptographic materials (never commit real keys)
+*.keys
+*.key
+*.dat
+*.ini
+prod.keys
+title.keys
+keys.dat
+keys.ini
+keys.txt
+!tests/fixtures/dummy.keys
 
 # Binary & Packaging outputs
 *.nro
@@ -43,3 +70,19 @@ coverage/
 *.npdm
 *.elf
 *.bin
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Third-Party local build artifacts
+third_party/hacbrewpack/src/config.mk
+third_party/hacbrewpack/src/hacbrewpack
+third_party/hacbrewpack/src/hacbrewpack.exe
+third_party/hacbrewpack/src/*.o
+third_party/hacbrewpack/src/mbedtls/library/*.o
+third_party/hacbrewpack/src/mbedtls/library/libmbed*
+third_party/hacbrewpack/src/mbedtls/programs/*/*.o
+third_party/hacbrewpack/src/mbedtls/programs/*/*

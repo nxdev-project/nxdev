@@ -62,6 +62,20 @@ enum class PackErrorCode {
 
 [[nodiscard]] std::string pack_error_code_to_string(PackErrorCode code);
 
+struct BackendExecutionInfo {
+    std::string name;
+    std::string revision;
+    std::string executable;
+    std::string stage;
+    std::string working_dir;
+    std::string log_path;
+    std::string staging_dir;
+    int exit_code{0};
+    std::string stdout_output;
+    std::string stderr_output;
+    bool keys_configured{false};
+};
+
 struct PackageRequest {
     manifest::Manifest manifest;
     std::string project_root;
@@ -74,6 +88,8 @@ struct PackageRequest {
     bool force{false};
     bool dry_run{false};
     bool verbose{false};
+    bool keep_staging{false};
+    bool debug_backend{false};
 
     // Tool path overrides (useful for hermetic unit testing)
     std::string nacptool_path_override;
@@ -106,6 +122,8 @@ struct PackageResult {
     PackErrorCode error_code{PackErrorCode::None};
     std::string error_message;
     int exit_code{0};
+
+    std::optional<BackendExecutionInfo> backend_info;
 
     [[nodiscard]] std::string to_json() const;
 };

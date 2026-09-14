@@ -57,7 +57,26 @@ Convert your icon to a 256x256 JPEG image (`.jpg`).
 
 ---
 
-## 4. `NpdmGenerationFailed`
+## 4. `InvalidRomFS` / RomFS Recursion Error
+
+### Symptom
+```text
+Error [InvalidRomFS]: RomFS source directory cannot be identical to project root because this would cause recursive inclusion of build and staging artifacts.
+```
+
+### Cause
+RomFS was configured to point to `.`, `/`, `$HOME`, or contains `.nxdev`.
+
+### Resolution
+Place your RomFS asset files in a dedicated folder such as `romfs/` or `assets/romfs/` and set:
+```yaml
+assets:
+  romfs: romfs/
+```
+
+---
+
+## 5. `NpdmGenerationFailed`
 
 ### Symptom
 ```text
@@ -72,13 +91,28 @@ Check the `npdm:` section in `nxapp.yaml`. Ensure thread priorities are between 
 
 ---
 
-## 5. `ToolNotFound`
+## 6. `PackagingFailed` / OOM / Process Limits
 
 ### Symptom
 ```text
-Doctor reports: pack.elf2nso missing / pack.npdmtool missing
+NSP packaging failed during hacBrewPack execution.
+
+Backend:
+  gayhearts/hacBrewPack
+  revision: 1a5f378c1b5747c603f4a50a4a97d86cc7c05fd4
+
+Process:
+  exit: signal SIGKILL
+  peak memory: 3.8 GiB
+
+Backend log:
+  .nxdev/package/nsp/debug/logs/hacbrewpack.log
 ```
 
+### Cause
+The backend process was killed by the system OOM killer or exceeded NXDev's memory safety ceiling.
+
 ### Resolution
-Ensure devkitPro switch-tools is installed in `/opt/devkitpro/tools/bin` or `$DEVKITPRO/tools/bin`.
-Run `nxdev doctor` to verify host toolchain health.
+1. Check the backend log at `.nxdev/package/nsp/<profile>/logs/hacbrewpack.log`.
+2. Inspect the RomFS asset sizes and ensure there are no unbounded file trees or circular symlinks.
+3. If running in WSL, check Linux-allocated memory in `.wslconfig`.

@@ -20,9 +20,9 @@ NXDev interacts with and integrates external open-source tools and libraries fro
    - These libraries are distributed by devkitPro and licensed under their respective open-source licenses (zlib, MIT, Apache 2.0, BSD-style, etc.).
 
 3. **hacBrewPack (Bundled in `third_party/hacbrewpack`)**
-   - **Upstream**: [The-4n/hacBrewPack](https://github.com/The-4n/hacBrewPack)
-   - **Pinned Version**: 3.05 (Commit `5c34cb2f57564d6db53d3ea7e204c3a7263b6555`)
-   - **License**: ISC License (Copyright (c) 2018 The-4n)
+   - **Upstream**: [gayhearts/hacBrewPack](https://github.com/gayhearts/hacBrewPack)
+   - **Pinned Version**: 3.17 (Commit `1a5f378c1b5747c603f4a50a4a97d86cc7c05fd4`)
+   - **License**: GPL-2.0 License (Copyright (c) The-4n, lavender hearts)
    - **Notice**: Preserved in `third_party/hacbrewpack/LICENSE` and `third_party/hacbrewpack/README-NXDEV.md`. Built as `nxdev_hacbrewpack`.
 
 ## Strict Policy on Proprietary Nintendo Material

@@ -592,37 +592,44 @@ void Doctor::run_diagnostics(
         }
 
         const auto* hacbrewpack = env.get_tool("hacbrewpack");
+        std::string hbp_path;
         if (hacbrewpack && hacbrewpack->usable) {
+            hbp_path = hacbrewpack->path;
+        } else {
+            // Check build/bin/hacbrewpack or standard locations
+            std::vector<std::string> candidates = {
+                "./build/bin/hacbrewpack",
+                "/usr/local/bin/hacbrewpack",
+                "/opt/nxdev/bin/hacbrewpack"
+            };
+            for (const auto& c : candidates) {
+                if (fs::exists(c)) {
+                    hbp_path = c;
+                    break;
+                }
+            }
+        }
+
+        if (!hbp_path.empty()) {
+            bool is_wsl = env.host().is_wsl;
+            std::string arch_info = is_wsl ? "native Linux backend (WSL environment)" : "native Linux backend";
             add_check(CheckItem{
                 .id = "tool.hacbrewpack",
                 .category = "Packaging Tools",
                 .status = CheckStatus::Pass,
-                .message = "hacBrewPack found (" + hacbrewpack->path + ")",
-                .path = hacbrewpack->path,
+                .message = "gayhearts/hacBrewPack backend built (rev " + std::string(pack::HacBrewPackAdapter::PINNED_BACKEND_REVISION).substr(0, 7) + ", " + arch_info + " at " + hbp_path + ")",
+                .path = hbp_path,
                 .remedy_suggestion = ""
             });
         } else {
-            // Check bundled bin/hacbrewpack
-            std::string bundled_hbp = "./build/bin/hacbrewpack";
-            if (fs::exists(bundled_hbp)) {
-                add_check(CheckItem{
-                    .id = "tool.hacbrewpack",
-                    .category = "Packaging Tools",
-                    .status = CheckStatus::Pass,
-                    .message = "hacBrewPack found (bundled at " + bundled_hbp + ")",
-                    .path = bundled_hbp,
-                    .remedy_suggestion = ""
-                });
-            } else {
-                add_check(CheckItem{
-                    .id = "tool.hacbrewpack",
-                    .category = "Packaging Tools",
-                    .status = CheckStatus::Info,
-                    .message = "hacBrewPack not detected in PATH (will use bundled NXDevThirdParty::hacBrewPack)",
-                    .path = "",
-                    .remedy_suggestion = "Build the host tool target 'nxdev_hacbrewpack'."
-                });
-            }
+            add_check(CheckItem{
+                .id = "tool.hacbrewpack",
+                .category = "Packaging Tools",
+                .status = CheckStatus::Info,
+                .message = "gayhearts/hacBrewPack not detected in PATH (will use bundled NXDevThirdParty::hacBrewPack)",
+                .path = "",
+                .remedy_suggestion = "Build the host tool target 'nxdev_hacbrewpack'."
+            });
         }
 
         // Switch keys resolution check

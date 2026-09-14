@@ -105,8 +105,26 @@ std::string PackageResult::to_json() const {
     if (!success) {
         ss << "  \"error\": {\n";
         ss << "    \"code\": \"" << pack_error_code_to_string(error_code) << "\",\n";
+        if (backend_info.has_value() && !backend_info->stage.empty()) {
+            ss << "    \"stage\": \"" << escape_json_str(backend_info->stage) << "\",\n";
+        }
         ss << "    \"message\": \"" << escape_json_str(error_message) << "\",\n";
-        ss << "    \"exitCode\": " << exit_code << "\n";
+        ss << "    \"exitCode\": " << exit_code;
+        if (backend_info.has_value()) {
+            ss << ",\n    \"backend\": {\n";
+            ss << "      \"name\": \"" << escape_json_str(backend_info->name) << "\",\n";
+            ss << "      \"revision\": \"" << escape_json_str(backend_info->revision) << "\",\n";
+            ss << "      \"executable\": \"" << escape_json_str(backend_info->executable) << "\",\n";
+            ss << "      \"workingDir\": \"" << escape_json_str(backend_info->working_dir) << "\",\n";
+            ss << "      \"logPath\": \"" << escape_json_str(backend_info->log_path) << "\",\n";
+            ss << "      \"stagingDir\": \"" << escape_json_str(backend_info->staging_dir) << "\",\n";
+            ss << "      \"exitCode\": " << backend_info->exit_code << ",\n";
+            ss << "      \"stdout\": \"" << escape_json_str(backend_info->stdout_output) << "\",\n";
+            ss << "      \"stderr\": \"" << escape_json_str(backend_info->stderr_output) << "\"\n";
+            ss << "    }\n";
+        } else {
+            ss << "\n";
+        }
         ss << "  },\n";
     }
     ss << "  \"logs\": [";

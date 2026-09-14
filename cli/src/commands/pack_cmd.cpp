@@ -29,6 +29,8 @@ int PackCommand::execute(std::span<const std::string> args, CommandContext& ctx)
     bool no_build = false;
     bool force = false;
     bool verbose = ctx.verbose;
+    bool keep_staging = false;
+    bool debug_backend = false;
     std::string profile_str;
     std::string output_path;
     std::string keys_path;
@@ -49,6 +51,8 @@ int PackCommand::execute(std::span<const std::string> args, CommandContext& ctx)
                       << "  -o, --output <path>            Explicit target destination path for final artifact\n"
                       << "  --no-build                     Skip compilation and package existing ELF binary\n"
                       << "  -f, --force                    Force overwrite / repackage\n"
+                      << "  --keep-staging                 Retain backend staging directories after packaging\n"
+                      << "  --debug-backend                Display detailed backend execution diagnostic info\n"
                       << "  --dry-run                      Simulate packaging steps without invoking tools\n"
                       << "  --json                         Output result in structured JSON format\n"
                       << "  -V, --verbose                  Enable detailed diagnostic stage logging\n"
@@ -64,6 +68,10 @@ int PackCommand::execute(std::span<const std::string> args, CommandContext& ctx)
             force = true;
         } else if (a == "-V" || a == "--verbose") {
             verbose = true;
+        } else if (a == "--keep-staging") {
+            keep_staging = true;
+        } else if (a == "--debug-backend") {
+            debug_backend = true;
         } else if (a == "--profile") {
             if (i + 1 < args.size()) {
                 profile_str = args[++i];
@@ -246,6 +254,8 @@ int PackCommand::execute(std::span<const std::string> args, CommandContext& ctx)
     req.force = force;
     req.dry_run = dry_run;
     req.verbose = verbose;
+    req.keep_staging = keep_staging;
+    req.debug_backend = debug_backend;
     if (const auto* t = ctx.env.get_tool("elf2nso"); t && t->usable) req.elf2nso_path_override = t->path;
     if (const auto* t = ctx.env.get_tool("npdmtool"); t && t->usable) req.npdmtool_path_override = t->path;
     if (const auto* t = ctx.env.get_tool("nacptool"); t && t->usable) req.nacptool_path_override = t->path;
