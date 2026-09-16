@@ -73,6 +73,66 @@
 },
 {
   "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/application.cpp.obj -c /opt/nxdev/src/modules/borealis/application.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/application.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/application.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/button.cpp.obj -c /opt/nxdev/src/modules/borealis/button.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/button.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/button.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/container.cpp.obj -c /opt/nxdev/src/modules/borealis/container.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/container.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/container.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/dialog.cpp.obj -c /opt/nxdev/src/modules/borealis/dialog.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/dialog.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/dialog.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/image.cpp.obj -c /opt/nxdev/src/modules/borealis/image.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/image.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/image.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/label.cpp.obj -c /opt/nxdev/src/modules/borealis/label.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/label.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/label.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/list.cpp.obj -c /opt/nxdev/src/modules/borealis/list.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/list.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/list.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/scroll_view.cpp.obj -c /opt/nxdev/src/modules/borealis/scroll_view.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/scroll_view.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/scroll_view.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/theme.cpp.obj -c /opt/nxdev/src/modules/borealis/theme.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/theme.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/theme.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
+  "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DBRLS_RESOURCES=\\\"romfs:/resources/\\\" -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/view.cpp.obj -c /opt/nxdev/src/modules/borealis/view.cpp",
+  "file": "/opt/nxdev/src/modules/borealis/view.cpp",
+  "output": "CMakeFiles/nxdev_borealis.dir/opt/nxdev/src/modules/borealis/view.cpp.obj"
+},
+{
+  "directory": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/.nxdev/build/debug",
   "command": "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++ -DNXDEV_PLATFORM_SWITCH -D__SWITCH__ -I/opt/nxdev/include -isystem /opt/devkitpro/libnx/include -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -g -std=gnu++20 -march=armv8-a+crc+crypto -mtune=cortex-a57 -mcpu=cortex-a57 -fPIE -ftls-model=local-exec -Wall -Wextra -o CMakeFiles/smoke-app.dir/src/main.cpp.obj -c /home/jvrcruz/Projects/NXDev/tests/projects/smoke/src/main.cpp",
   "file": "/home/jvrcruz/Projects/NXDev/tests/projects/smoke/src/main.cpp",
   "output": "CMakeFiles/smoke-app.dir/src/main.cpp.obj"

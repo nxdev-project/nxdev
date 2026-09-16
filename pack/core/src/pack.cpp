@@ -100,7 +100,20 @@ std::string PackageResult::to_json() const {
     ss << "    \"nacp\": \"" << escape_json_str(nacp_file) << "\",\n";
     ss << "    \"icon\": \"" << escape_json_str(icon_file) << "\",\n";
     ss << "    \"iconSource\": \"" << escape_json_str(icon_source) << "\",\n";
-    ss << "    \"romfs\": \"" << escape_json_str(romfs_dir) << "\"\n";
+    ss << "    \"romfs\": \"" << escape_json_str(romfs_dir) << "\",\n";
+    ss << "    \"romfsStaged\": {\n";
+    ss << "      \"staged\": " << (!romfs_dir.empty() ? "true" : "false") << ",\n";
+    ss << "      \"path\": \"" << escape_json_str(romfs_dir) << "\",\n";
+    ss << "      \"manifest\": \"" << escape_json_str(romfs_manifest_file) << "\",\n";
+    ss << "      \"fingerprint\": \"" << escape_json_str(romfs_fingerprint) << "\",\n";
+    ss << "      \"filesCount\": " << romfs_files_count << ",\n";
+    ss << "      \"overridesCount\": " << romfs_overrides_count << ",\n";
+    ss << "      \"layers\": [";
+    for (size_t i = 0; i < romfs_layers.size(); ++i) {
+        ss << "\"" << escape_json_str(romfs_layers[i]) << "\"" << (i + 1 < romfs_layers.size() ? ", " : "");
+    }
+    ss << "]\n";
+    ss << "    }\n";
     ss << "  },\n";
     if (!success) {
         ss << "  \"error\": {\n";

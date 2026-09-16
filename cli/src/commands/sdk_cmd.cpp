@@ -461,10 +461,44 @@ int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) 
                 fs::copy(repo_root / "templates", inner_stage / "share" / "nxdev" / "templates", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
             }
 
-            // 6. Copy UI Framework Resources
+            // 6. Copy UI Framework Resources & Provenance Metadata
             if (fs::exists(repo_root / "third_party" / "borealis" / "resources")) {
+                fs::path borealis_share = inner_stage / "share" / "nxdev" / "borealis";
+                fs::create_directories(borealis_share / "resources");
+                fs::copy(repo_root / "third_party" / "borealis" / "resources", borealis_share / "resources", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+
+                // Also provide compatibility alias at share/nxdev/resources/ui
                 fs::create_directories(inner_stage / "share" / "nxdev" / "resources" / "ui");
                 fs::copy(repo_root / "third_party" / "borealis" / "resources", inner_stage / "share" / "nxdev" / "resources" / "ui", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+
+                // Write backend.json
+                {
+                    std::ofstream bf(borealis_share / "backend.json");
+                    bf << "{\n"
+                       << "  \"backendName\": \"borealis\",\n"
+                       << "  \"repository\": \"https://github.com/jvrcruzGAMES/borealis\",\n"
+                       << "  \"branch\": \"wiliwili\",\n"
+                       << "  \"revision\": \"5f08b286f3df737f3321d2247a6fe633fcead03c\",\n"
+                       << "  \"resourceLayoutVersion\": 1,\n"
+                       << "  \"resourceRoot\": \"resources\",\n"
+                       << "  \"runtimeResourcesDefine\": \"romfs:/resources/\"\n"
+                       << "}\n";
+                }
+
+                // Write resources.manifest.json
+                {
+                    std::ofstream mf(borealis_share / "resources.manifest.json");
+                    mf << "{\n"
+                       << "  \"resourceRoot\": \"resources\",\n"
+                       << "  \"version\": 1,\n"
+                       << "  \"requiredDirectories\": [\n"
+                       << "    \"material\",\n"
+                       << "    \"font\",\n"
+                       << "    \"i18n\",\n"
+                       << "    \"img/sys\"\n"
+                       << "  ]\n"
+                       << "}\n";
+                }
             }
 
             // 7. Copy Licenses

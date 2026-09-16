@@ -3,6 +3,7 @@
 add_library(nxdev_pack_core STATIC
     core/src/pack.cpp
     core/src/process.cpp
+    core/src/romfs_stager.cpp
     nro/src/nro_backend.cpp
     nsp/src/nsp_backend.cpp
 )

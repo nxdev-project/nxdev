@@ -299,7 +299,16 @@ int PackCommand::execute(std::span<const std::string> args, CommandContext& ctx)
 
     std::cout << "\n✔ Packaging completed successfully!\n\n"
               << "Output Artifact:\n"
-              << "  " << pack_res.output_file << " (" << pack_res.file_size_bytes << " bytes)\n\n";
+              << "  " << pack_res.output_file << " (" << pack_res.file_size_bytes << " bytes)\n";
+
+    if (!pack_res.romfs_dir.empty() && verbose) {
+        std::cout << "\nRomFS Staging Summary:\n"
+                  << "  Staged Directory: " << pack_res.romfs_dir << "\n"
+                  << "  Files Staged:     " << pack_res.romfs_files_count << "\n"
+                  << "  User Overrides:   " << pack_res.romfs_overrides_count << "\n"
+                  << "  Fingerprint:      " << pack_res.romfs_fingerprint << "\n";
+    }
+    std::cout << "\n";
 
     return 0;
 }

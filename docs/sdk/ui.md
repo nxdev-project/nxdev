@@ -167,3 +167,14 @@ If low-level access to the underlying `brls::*` objects is required for custom r
 // Warning: Direct use of brls:: types is backend-specific and not covered by API stability guarantees
 brls::View* raw_view = nxdev::ui::borealis::get_native_view(my_view.get());
 ```
+
+---
+
+## RomFS Staging & Framework Resources
+
+When `nxdev.borealis` is listed as a project dependency, NXDev's packaging pipeline automatically stages the essential Borealis framework resources (`font/`, `material/`, `i18n/`, `img/sys/`) into `.nxdev/build/<profile>/romfs/resources/`.
+
+- **Compile Definition**: NXDev automatically configures `BRLS_RESOURCES="romfs:/resources/"` on `NXDev::Borealis`.
+- **User Overrides**: You can customize or override any Borealis asset by simply placing a replacement file in your project's RomFS at `resources/...` (e.g. `romfs/resources/material/theme_light.json`).
+- **No Manual Copy**: You never need to copy Borealis resource directories manually. NXDev stages everything safely prior to NRO/NSP packaging.
+- For full details on layering and staging manifests, see [RomFS Staging Pipeline](file:///home/jvrcruz/Projects/NXDev/docs/build/romfs.md).

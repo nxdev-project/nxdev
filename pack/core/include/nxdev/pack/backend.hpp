@@ -115,6 +115,11 @@ struct PackageResult {
     std::string icon_file;
     std::string icon_source; // "project", "libnx_default", "none"
     std::string romfs_dir;
+    std::string romfs_manifest_file;
+    std::string romfs_fingerprint;
+    size_t romfs_files_count{0};
+    size_t romfs_overrides_count{0};
+    std::vector<std::string> romfs_layers;
     std::string backend_name;
     std::string backend_version;
 

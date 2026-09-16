@@ -1,6 +1,7 @@
 #include <nxdev/pack/nsp_backend.hpp>
 #include <nxdev/pack/nro_backend.hpp>
 #include <nxdev/pack/process.hpp>
+#include <nxdev/pack/romfs_stager.hpp>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -877,26 +878,51 @@ PackageResult NspPackBackend::pack(
         }
     }
 
-    // RomFS handling with recursion & symlink protection
+    // RomFS handling via Shared Staging Pipeline
     bool has_romfs = false;
     std::string canonical_romfs_path;
+    std::optional<std::string> user_romfs_opt;
     const auto& romfs_cfg = request.manifest.assets().romfs;
     if (romfs_cfg.enabled || !romfs_cfg.raw_path.empty()) {
         std::string p_romfs = !romfs_cfg.resolved_path.empty() ?
                               romfs_cfg.resolved_path :
                               (fs::path(project_root) / romfs_cfg.raw_path).string();
-        
-        std::string romfs_err;
-        if (!HacBrewPackAdapter::validate_romfs_directory(p_romfs, project_root, romfs_err)) {
+        user_romfs_opt = p_romfs;
+    }
+
+    if (!request.dry_run) {
+        RomFsStageRequest stage_req;
+        stage_req.project_root = project_root;
+        stage_req.output_dir = (fs::path(project_root) / ".nxdev" / "build" / request.profile / "romfs").string();
+        stage_req.user_romfs_path = user_romfs_opt;
+        stage_req.framework_layers = RomFsStager::resolve_manifest_layers(request.manifest, project_root);
+        stage_req.clean = true;
+        stage_req.verbose = request.verbose;
+
+        auto stage_res = RomFsStager::stage(stage_req);
+        if (!stage_res.success) {
             res.success = false;
             res.error_code = PackErrorCode::InvalidRomFS;
-            res.error_message = romfs_err;
+            res.error_message = stage_res.error_message;
             return res;
         }
-        has_romfs = true;
-        std::error_code ec;
-        canonical_romfs_path = fs::canonical(p_romfs, ec).string();
-        res.romfs_dir = canonical_romfs_path;
+
+        if (stage_res.has_romfs) {
+            has_romfs = true;
+            canonical_romfs_path = stage_res.staged_dir;
+            res.romfs_dir = canonical_romfs_path;
+            res.romfs_manifest_file = stage_res.manifest_path;
+            res.romfs_fingerprint = stage_res.fingerprint;
+            res.romfs_files_count = stage_res.files_copied;
+            res.romfs_overrides_count = stage_res.overridden_files;
+            res.romfs_layers = stage_res.source_layers;
+        }
+    } else {
+        if (user_romfs_opt.has_value() || !RomFsStager::resolve_manifest_layers(request.manifest, project_root).empty()) {
+            has_romfs = true;
+            canonical_romfs_path = (fs::path(project_root) / ".nxdev" / "build" / request.profile / "romfs").string();
+            res.romfs_dir = canonical_romfs_path;
+        }
     }
 
     // -------------------------------------------------------------------------

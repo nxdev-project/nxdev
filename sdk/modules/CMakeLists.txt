@@ -119,5 +119,6 @@ target_include_directories(nxdev_borealis PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(nxdev_borealis PUBLIC NXDev::Core)
+target_compile_definitions(nxdev_borealis PRIVATE BRLS_RESOURCES="romfs:/resources/")
 nxdev_configure_target(nxdev_borealis)
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nxdev/pack/backend.hpp>
+#include <nxdev/pack/romfs_stager.hpp>
 #include <map>
 #include <memory>
 

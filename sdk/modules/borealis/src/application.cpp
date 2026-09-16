@@ -63,6 +63,9 @@ nxdev::Result<Application> Application::create() {
 nxdev::Result<Application> Application::create(const Config& config) {
     try {
 #if defined(NXDEV_PLATFORM_SWITCH) || defined(ENABLE_BOREALIS_BACKEND)
+#ifdef BRLS_RESOURCES
+        nxdev::log::debug("[NXDev::Borealis] BRLS_RESOURCES=" + std::string(BRLS_RESOURCES));
+#endif
         // Initialize Borealis backend
         if (!brls::Application::init()) {
             nxdev::log::error("Failed to initialize Borealis UI runtime");

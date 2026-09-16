@@ -49,6 +49,12 @@ nxdev_configure_target(test_pack)
 add_test(NAME PackManagerTest COMMAND test_pack)
 set_tests_properties(PackManagerTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
+add_executable(test_romfs_stager unit/test_romfs_stager.cpp)
+target_link_libraries(test_romfs_stager PRIVATE NXDevPack::Core)
+nxdev_configure_target(test_romfs_stager)
+add_test(NAME RomFsStagerTest COMMAND test_romfs_stager)
+set_tests_properties(RomFsStagerTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
 add_executable(test_environment unit/test_environment.cpp)
 target_link_libraries(test_environment PRIVATE NXDev::CLI)
 target_compile_definitions(test_environment PRIVATE NXDEV_SOURCE_DIR="${CMAKE_SOURCE_DIR}")

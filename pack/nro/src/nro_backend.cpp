@@ -1,5 +1,6 @@
 #include <nxdev/pack/nro_backend.hpp>
 #include <nxdev/pack/process.hpp>
+#include <nxdev/pack/romfs_stager.hpp>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
@@ -358,22 +359,49 @@ PackageResult NroPackBackend::pack(
     }
     res.icon_file = resolved_icon_path;
 
-    // RomFS Resolution
-    std::string resolved_romfs_dir;
+    // RomFS Resolution via Shared Staging Pipeline
+    std::optional<std::string> user_romfs_opt;
     const auto& romfs_cfg = request.manifest.assets().romfs;
     if (romfs_cfg.enabled && !romfs_cfg.raw_path.empty()) {
         std::string p_romfs = !romfs_cfg.resolved_path.empty() ?
                               romfs_cfg.resolved_path :
                               (fs::path(project_root) / romfs_cfg.raw_path).string();
-        if (!fs::exists(p_romfs) || !fs::is_directory(p_romfs)) {
+        user_romfs_opt = p_romfs;
+    }
+
+    std::string canonical_staged_romfs;
+    if (!request.dry_run) {
+        RomFsStageRequest stage_req;
+        stage_req.project_root = project_root;
+        stage_req.output_dir = (fs::path(project_root) / ".nxdev" / "build" / request.profile / "romfs").string();
+        stage_req.user_romfs_path = user_romfs_opt;
+        stage_req.framework_layers = RomFsStager::resolve_manifest_layers(request.manifest, project_root);
+        stage_req.clean = true;
+        stage_req.verbose = request.verbose;
+
+        auto stage_res = RomFsStager::stage(stage_req);
+        if (!stage_res.success) {
             res.success = false;
             res.error_code = PackErrorCode::InvalidRomFS;
-            res.error_message = "Configured RomFS directory does not exist or is not a directory: " + p_romfs;
+            res.error_message = stage_res.error_message;
             return res;
         }
-        resolved_romfs_dir = p_romfs;
+
+        if (stage_res.has_romfs) {
+            canonical_staged_romfs = stage_res.staged_dir;
+            res.romfs_dir = canonical_staged_romfs;
+            res.romfs_manifest_file = stage_res.manifest_path;
+            res.romfs_fingerprint = stage_res.fingerprint;
+            res.romfs_files_count = stage_res.files_copied;
+            res.romfs_overrides_count = stage_res.overridden_files;
+            res.romfs_layers = stage_res.source_layers;
+        }
+    } else {
+        if (user_romfs_opt.has_value() || !RomFsStager::resolve_manifest_layers(request.manifest, project_root).empty()) {
+            canonical_staged_romfs = (fs::path(project_root) / ".nxdev" / "build" / request.profile / "romfs").string();
+            res.romfs_dir = canonical_staged_romfs;
+        }
     }
-    res.romfs_dir = resolved_romfs_dir;
 
     // -------------------------------------------------------------------------
     // Stage 5: Create NRO Binary (elf2nro)
@@ -389,8 +417,8 @@ PackageResult NroPackBackend::pack(
     if (!resolved_icon_path.empty()) {
         elf2nro_args.push_back("--icon=" + resolved_icon_path);
     }
-    if (!resolved_romfs_dir.empty()) {
-        elf2nro_args.push_back("--romfsdir=" + resolved_romfs_dir);
+    if (!canonical_staged_romfs.empty()) {
+        elf2nro_args.push_back("--romfsdir=" + canonical_staged_romfs);
     }
 
     if (!request.dry_run) {
