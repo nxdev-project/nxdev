@@ -357,6 +357,19 @@ PackageRegistry PackageRegistry::create_default() {
         .upstream_url = ""
     });
 
+    reg.add_package(PackageDefinition{
+        .id = "nxdev.borealis",
+        .name = "Borealis UI",
+        .description = "NXDev controller-first UI module powered by Borealis",
+        .kind = PackageKind::Builtin,
+        .category = "ui",
+        .dependencies = {"nxdev.core", "nxdev.deko3d"},
+        .devkitpro = {},
+        .cmake = {.targets = {"NXDev::Borealis"}, .headers = {"nxdev/ui.hpp"}, .libraries = {}},
+        .license = "Apache-2.0",
+        .upstream_url = "https://github.com/jvrcruzGAMES/borealis"
+    });
+
     // devkitPro-backed portlibs
     reg.add_package(PackageDefinition{
         .id = "nxdev.sdl2",

@@ -289,6 +289,34 @@ if(NOT TARGET NXDev::SDL2TTF)
     target_link_libraries(NXDev::SDL2TTF INTERFACE NXDev::SDL2 NXDev::FreeType SDL2_ttf)
 endif()
 
+# NXDev::Borealis
+if(NOT TARGET nxdev_borealis AND NOT TARGET NXDev::Borealis)
+    if(NXDEV_SDK_MODULES_DIR AND EXISTS "${NXDEV_SDK_MODULES_DIR}/borealis/src/application.cpp")
+        add_library(nxdev_borealis STATIC
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/view.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/container.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/label.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/button.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/image.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/scroll_view.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/dialog.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/list.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/theme.cpp"
+            "${NXDEV_SDK_MODULES_DIR}/borealis/src/application.cpp"
+        )
+        add_library(NXDev::Borealis ALIAS nxdev_borealis)
+        target_include_directories(nxdev_borealis PUBLIC "${NXDEV_SDK_MODULES_DIR}/borealis/include")
+        target_link_libraries(nxdev_borealis PUBLIC NXDev::Core NXDev::Deko3D)
+    elseif(NXDEV_SDK_INC_DIR AND EXISTS "${NXDEV_SDK_SRC_DIR}/modules/borealis/application.cpp")
+        file(GLOB BOREALIS_INST_SRCS "${NXDEV_SDK_SRC_DIR}/modules/borealis/*.cpp")
+        add_library(nxdev_borealis STATIC ${BOREALIS_INST_SRCS})
+        add_library(NXDev::Borealis ALIAS nxdev_borealis)
+        target_include_directories(nxdev_borealis PUBLIC "${NXDEV_SDK_INC_DIR}")
+        target_link_libraries(nxdev_borealis PUBLIC NXDev::Core NXDev::Deko3D)
+    endif()
+endif()
+
+
 
 
 # ------------------------------------------------------------------------------

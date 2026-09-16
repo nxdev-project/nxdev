@@ -26,6 +26,16 @@ nxdev_configure_target(test_modules)
 add_test(NAME SdkModulesTest COMMAND test_modules)
 set_tests_properties(SdkModulesTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
+add_executable(test_ui unit/test_ui.cpp)
+target_link_libraries(test_ui PRIVATE
+    NXDev::Core
+    NXDev::Borealis
+)
+nxdev_configure_target(test_ui)
+add_test(NAME SdkUiTest COMMAND test_ui)
+set_tests_properties(SdkUiTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
+
 add_executable(test_manifest unit/test_manifest.cpp)
 target_link_libraries(test_manifest PRIVATE NXDevAppManifest::Parser)
 target_compile_definitions(test_manifest PRIVATE NXDEV_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
@@ -105,6 +115,12 @@ target_link_libraries(test_sdk_package PRIVATE NXDev::CLI)
 nxdev_configure_target(test_sdk_package)
 add_test(NAME SdkPackagingTest COMMAND test_sdk_package)
 set_tests_properties(SdkPackagingTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
+add_executable(test_header_leak test_header_leak.cpp)
+nxdev_configure_target(test_header_leak)
+add_test(NAME HeaderIsolationTest COMMAND test_header_leak)
+set_tests_properties(HeaderIsolationTest PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
 
 if(TARGET nxdev)
     add_test(NAME CliHelpTest COMMAND nxdev --help)

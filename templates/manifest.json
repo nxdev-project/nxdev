@@ -45,6 +45,15 @@
       "tags": ["cpp", "deko3d", "graphics", "3d", "experimental"],
       "defaultMain": "src/main.cpp",
       "dependencies": ["nxdev.core", "nxdev.deko3d"]
+    },
+    {
+      "id": "nxdev-ui",
+      "name": "NXDev UI Application",
+      "description": "Controller-first graphical UI application using the NXDev UI abstraction layer powered by Borealis.",
+      "language": "cpp",
+      "tags": ["cpp", "nxdev", "ui", "borealis", "graphics"],
+      "defaultMain": "src/main.cpp",
+      "dependencies": ["nxdev.core", "nxdev.borealis"]
     }
   ]
 }

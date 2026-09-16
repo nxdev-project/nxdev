@@ -97,3 +97,27 @@ target_include_directories(nxdev_display PUBLIC
 )
 target_link_libraries(nxdev_display PUBLIC NXDev::Core)
 nxdev_configure_target(nxdev_display)
+
+# ------------------------------------------------------------------------------
+# Target: NXDev::Borealis
+# ------------------------------------------------------------------------------
+add_library(nxdev_borealis STATIC
+    borealis/src/view.cpp
+    borealis/src/container.cpp
+    borealis/src/label.cpp
+    borealis/src/button.cpp
+    borealis/src/image.cpp
+    borealis/src/scroll_view.cpp
+    borealis/src/dialog.cpp
+    borealis/src/list.cpp
+    borealis/src/theme.cpp
+    borealis/src/application.cpp
+)
+add_library(NXDev::Borealis ALIAS nxdev_borealis)
+target_include_directories(nxdev_borealis PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/borealis/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(nxdev_borealis PUBLIC NXDev::Core)
+nxdev_configure_target(nxdev_borealis)
+

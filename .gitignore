@@ -1,13 +1,13 @@
-# Build directories
-build/
-bin/
-lib/
-out/
-dist/
+# Build directories (root)
+/build/
+/bin/
+/lib/
+/out/
+/dist/
+/Makefile
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 
 # NXDev Runtime & Package Staging Directories
 .nxdev/
@@ -50,11 +50,8 @@ coverage/
 *.tmp
 *.tmp.*
 
-# Keys & Cryptographic materials (never commit real keys)
+# Keys & Cryptographic materials (never commit real Switch keys)
 *.keys
-*.key
-*.dat
-*.ini
 prod.keys
 title.keys
 keys.dat
@@ -69,7 +66,6 @@ keys.txt
 *.nsp
 *.npdm
 *.elf
-*.bin
 *.o
 *.a
 *.so
@@ -85,4 +81,3 @@ third_party/hacbrewpack/src/*.o
 third_party/hacbrewpack/src/mbedtls/library/*.o
 third_party/hacbrewpack/src/mbedtls/library/libmbed*
 third_party/hacbrewpack/src/mbedtls/programs/*/*.o
-third_party/hacbrewpack/src/mbedtls/programs/*/*

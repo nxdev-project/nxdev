@@ -106,6 +106,20 @@
       "license": "MIT"
     },
     {
+      "id": "nxdev.borealis",
+      "name": "Borealis UI",
+      "description": "NXDev controller-first UI module powered by Borealis",
+      "kind": "builtin",
+      "category": "ui",
+      "dependencies": ["nxdev.core", "nxdev.deko3d"],
+      "cmake": {
+        "targets": ["NXDev::Borealis"],
+        "headers": ["nxdev/ui.hpp"]
+      },
+      "license": "Apache-2.0",
+      "upstream_url": "https://github.com/jvrcruzGAMES/borealis"
+    },
+    {
       "id": "nxdev.sdl2",
       "name": "SDL2",
       "description": "Simple DirectMedia Layer 2 cross-platform multimedia library for Nintendo Switch",

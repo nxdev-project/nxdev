@@ -82,8 +82,11 @@ int main() {
         assert_test(res == 0, "Unzip SDK.zip succeeds");
 
         assert_test(fs::exists(inner_extract / "include" / "nxdev" / "nxdev.hpp"), "SDK headers present in SDK.zip");
+        assert_test(fs::exists(inner_extract / "include" / "nxdev" / "ui.hpp"), "UI umbrella header present in SDK.zip");
+        assert_test(fs::exists(inner_extract / "include" / "nxdev" / "ui" / "view.hpp"), "UI view header present in SDK.zip");
         assert_test(fs::exists(inner_extract / "share" / "nxdev" / "sdk.json"), "sdk.json version metadata present");
         assert_test(fs::exists(inner_extract / "share" / "nxdev" / "cmake" / "NXDevConfig.cmake"), "NXDevConfig.cmake present");
+        assert_test(fs::exists(inner_extract / "share" / "nxdev" / "resources" / "ui"), "UI framework resources present in SDK.zip");
         assert_test(fs::exists(inner_extract / "licenses" / "LICENSE"), "LICENSE present");
         assert_test(fs::exists(inner_extract / "bin" / "hacbrewpack"), "hacbrewpack binary present in SDK.zip bin/");
     }

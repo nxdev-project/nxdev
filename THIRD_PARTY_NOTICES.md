@@ -25,6 +25,20 @@ NXDev interacts with and integrates external open-source tools and libraries fro
    - **License**: GPL-2.0 License (Copyright (c) The-4n, lavender hearts)
    - **Notice**: Preserved in `third_party/hacbrewpack/LICENSE` and `third_party/hacbrewpack/README-NXDEV.md`. Built as `nxdev_hacbrewpack`.
 
+4. **Borealis UI Backend (Bundled in `third_party/borealis`)**
+   - **Upstream**: [jvrcruzGAMES/borealis](https://github.com/jvrcruzGAMES/borealis) (branch `wiliwili`)
+   - **Pinned Version**: Commit `5f08b286f3df737f3321d2247a6fe633fcead03c`
+   - **License**: Apache-2.0 (Copyright 2019-2021 natinusala, p-sam, xfangfang, dragonflylee, and borealis contributors)
+   - **Notice**: Preserved in `third_party/borealis/LICENSE` and `third_party/borealis/NOTICE`. Used as the internal backend for `NXDev::Borealis`.
+   - **Bundled Sub-components**:
+     - **Yoga**: MIT License (Copyright (c) Meta Platforms, Inc. and affiliates)
+     - **NanoVG**: zlib License (Copyright (c) 2013 Mikko Mononen)
+     - **fmt**: MIT License (Copyright (c) 2012 - present, Victor Zverovich)
+     - **tweeny**: MIT License (Copyright (c) 2016-2018 Leonardo Vencovsky)
+     - **tinyxml2**: zlib License (Copyright (c) 2011-2018 Lee Thomason)
+     - **Material Icons Font**: Apache-2.0 (Copyright (c) Google LLC)
+     - **switch-libpulsar**: MIT License (Copyright (c) 2020-2021 natinusala)
+
 ## Strict Policy on Proprietary Nintendo Material
 
 NXDev is an unofficial, clean-room, open-source development ecosystem.

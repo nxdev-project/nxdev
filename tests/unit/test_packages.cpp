@@ -24,6 +24,11 @@ void test_registry_default() {
     NXDEV_TEST_ASSERT(!sdl2->devkitpro.packages.empty());
     NXDEV_TEST_ASSERT(sdl2->devkitpro.packages[0] == "switch-sdl2");
 
+    const auto* borealis = reg.find("nxdev.borealis");
+    NXDEV_TEST_ASSERT(borealis != nullptr);
+    NXDEV_TEST_ASSERT(borealis->is_builtin());
+    NXDEV_TEST_ASSERT(borealis->category == "ui");
+
     // Test alias lookup
     const auto* sdl2_alias = reg.find("sdl2");
     NXDEV_TEST_ASSERT(sdl2_alias == sdl2);

@@ -85,6 +85,7 @@ std::vector<TemplateInfo> load_templates(const fs::path& templates_root) {
     list.push_back({"minimal-cpp", "Minimal C++ (Raw libnx)", "Minimal Nintendo Switch application in C++20 using raw libnx", "cpp", {"cpp", "libnx"}, {}});
     list.push_back({"sdl2", "SDL2 Application", "2D graphics and sound application using devkitPro SDL2 portlib", "cpp", {"cpp", "sdl2"}, {"nxdev.core", "nxdev.sdl2"}});
     list.push_back({"deko3d", "deko3d Graphics Application (Experimental)", "Low-level 3D graphics application using deko3d API", "cpp", {"cpp", "deko3d"}, {"nxdev.core", "nxdev.deko3d"}});
+    list.push_back({"nxdev-ui", "Borealis UI Application", "Modern GUI application using NXDev::Borealis abstraction layer (nxdev::ui)", "cpp", {"cpp", "ui", "borealis"}, {"nxdev.core", "nxdev.borealis"}});
 
     (void)templates_root;
     return list;

@@ -1,0 +1,24 @@
+schemaVersion: 1
+
+application:
+  id: "0100000000002002"
+  name: "UI Demo"
+  author: "NXDev Team"
+  version: "1.0.0"
+  description: "Comprehensive demonstration of the NXDev UI abstraction layer powered by Borealis"
+
+build:
+  language: cpp
+  standard: c++20
+  defaultProfile: debug
+  dependencies:
+    - nxdev.core
+    - nxdev.borealis
+  romfs:
+    enabled: true
+    directory: "romfs"
+
+packaging:
+  defaultFormat: nro
+  nro:
+    enabled: true

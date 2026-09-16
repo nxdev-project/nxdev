@@ -1,0 +1,17 @@
+schemaVersion: 1
+
+application:
+  titleId: "{{PROJECT_TITLE_ID}}"
+  name: "{{PROJECT_NAME}}"
+  author: "{{PROJECT_AUTHOR}}"
+  version: "{{PROJECT_VERSION}}"
+  description: "NXDev UI Application powered by Borealis"
+
+dependencies:
+  - nxdev.core
+  - nxdev.borealis
+
+build:
+  language: cpp
+  standard: "c++20"
+  defaultProfile: debug

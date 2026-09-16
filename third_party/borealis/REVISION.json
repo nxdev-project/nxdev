@@ -1,0 +1,11 @@
+{
+  "module": "nxdev.borealis",
+  "backend": "borealis",
+  "repository": "https://github.com/jvrcruzGAMES/borealis",
+  "branch": "wiliwili",
+  "revision": "5f08b286f3df737f3321d2247a6fe633fcead03c",
+  "commitDate": "2026-04-25T13:54:21+08:00",
+  "license": "Apache-2.0",
+  "apiVersion": 1,
+  "notes": "Pinned release of jvrcruzGAMES/borealis (wiliwili branch) with Switch deko3d backend, flexbox/yoga, NanoVG, fmt, tweeny, tinyxml2, and switch-libpulsar."
+}

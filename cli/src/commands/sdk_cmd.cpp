@@ -414,29 +414,25 @@ int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) 
             }
 
             // 1. Copy Headers
-            for (const auto& entry : fs::directory_iterator(repo_root / "sdk" / "core" / "include" / "nxdev")) {
-                if (entry.is_regular_file()) {
-                    fs::copy_file(entry.path(), inner_stage / "include" / "nxdev" / entry.path().filename(), fs::copy_options::overwrite_existing);
-                }
+            if (fs::exists(repo_root / "sdk" / "core" / "include")) {
+                fs::copy(repo_root / "sdk" / "core" / "include", inner_stage / "include", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
             }
             for (const auto& mod : fs::directory_iterator(repo_root / "sdk" / "modules")) {
-                if (mod.is_directory() && fs::exists(mod.path() / "include" / "nxdev")) {
-                    for (const auto& h : fs::directory_iterator(mod.path() / "include" / "nxdev")) {
-                        if (h.is_regular_file()) {
-                            fs::copy_file(h.path(), inner_stage / "include" / "nxdev" / h.path().filename(), fs::copy_options::overwrite_existing);
-                        }
-                    }
+                if (mod.is_directory() && fs::exists(mod.path() / "include")) {
+                    fs::copy(mod.path() / "include", inner_stage / "include", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
                 }
             }
 
             // 2. Copy Sources
-            for (const auto& entry : fs::directory_iterator(repo_root / "sdk" / "core" / "src")) {
-                if (entry.is_regular_file()) {
-                    fs::copy_file(entry.path(), inner_stage / "src" / "core" / entry.path().filename(), fs::copy_options::overwrite_existing);
-                }
+            if (fs::exists(repo_root / "sdk" / "core" / "src")) {
+                fs::copy(repo_root / "sdk" / "core" / "src", inner_stage / "src" / "core", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
             }
             for (const auto& mod : fs::directory_iterator(repo_root / "sdk" / "modules")) {
                 if (mod.is_directory() && fs::exists(mod.path() / "src")) {
+                    fs::path mod_src_dst = inner_stage / "src" / "modules" / mod.path().filename();
+                    fs::create_directories(mod_src_dst);
+                    fs::copy(mod.path() / "src", mod_src_dst, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+                    // Also copy top-level module .cpp if any
                     for (const auto& s : fs::directory_iterator(mod.path() / "src")) {
                         if (s.is_regular_file()) {
                             fs::copy_file(s.path(), inner_stage / "src" / "modules" / s.path().filename(), fs::copy_options::overwrite_existing);
@@ -465,7 +461,13 @@ int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) 
                 fs::copy(repo_root / "templates", inner_stage / "share" / "nxdev" / "templates", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
             }
 
-            // 6. Copy Licenses
+            // 6. Copy UI Framework Resources
+            if (fs::exists(repo_root / "third_party" / "borealis" / "resources")) {
+                fs::create_directories(inner_stage / "share" / "nxdev" / "resources" / "ui");
+                fs::copy(repo_root / "third_party" / "borealis" / "resources", inner_stage / "share" / "nxdev" / "resources" / "ui", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+            }
+
+            // 7. Copy Licenses
             if (fs::exists(repo_root / "LICENSE")) {
                 fs::copy_file(repo_root / "LICENSE", inner_stage / "licenses" / "LICENSE", fs::copy_options::overwrite_existing);
             }
