@@ -17,7 +17,7 @@ SAFE_JOBS=${CPUS}
 [[ ${MEM_JOBS} -lt ${SAFE_JOBS} ]] && SAFE_JOBS=${MEM_JOBS}
 [[ ${SAFE_JOBS} -lt 1 ]] && SAFE_JOBS=1
 
-echo "==> Building NXDev targets (jobs=${SAFE_JOBS})..."
+echo "==> Building NXDev targets (including host tools and hacbrewpack, jobs=${SAFE_JOBS})..."
 cmake --build "${BUILD_DIR}" --parallel "${SAFE_JOBS}"
 
 echo "==> Running NXDev test suite..."

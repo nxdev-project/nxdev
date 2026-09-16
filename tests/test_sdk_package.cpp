@@ -85,6 +85,7 @@ int main() {
         assert_test(fs::exists(inner_extract / "share" / "nxdev" / "sdk.json"), "sdk.json version metadata present");
         assert_test(fs::exists(inner_extract / "share" / "nxdev" / "cmake" / "NXDevConfig.cmake"), "NXDevConfig.cmake present");
         assert_test(fs::exists(inner_extract / "licenses" / "LICENSE"), "LICENSE present");
+        assert_test(fs::exists(inner_extract / "bin" / "hacbrewpack"), "hacbrewpack binary present in SDK.zip bin/");
     }
 
     // Test 4: Run install.sh to Temporary Custom Prefix with Mock Shell Profile
@@ -108,6 +109,7 @@ int main() {
         assert_test(fs::exists(install_prefix / "share" / "nxdev" / "sdk.json"), "sdk.json installed to prefix");
         assert_test(fs::exists(install_prefix / "share" / "nxdev" / "cmake" / "NXDevConfig.cmake"), "CMake config installed to prefix");
         assert_test(fs::exists(install_prefix / "bin"), "bin directory installed to prefix");
+        assert_test(fs::exists(install_prefix / "bin" / "hacbrewpack"), "hacbrewpack binary installed to prefix bin/");
     }
 
     // Test 5: Verify Managed Block in Shell Profile & Idempotence

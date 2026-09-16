@@ -332,6 +332,9 @@ Environment Environment::detect(
     if (env.switch_tools_.is_found) {
         switch_tool_dirs.push_back(env.switch_tools_.path);
     }
+    if (env.sdk_.found) {
+        switch_tool_dirs.push_back((fs::path(env.sdk_.path) / "bin").string());
+    }
 
     // 6. Probe core compiler tools
     env.tools_["aarch64-none-elf-gcc"] = probe_tool("AArch64 GCC", "aarch64-none-elf-gcc", ToolCategory::CoreCompiler, compiler_search_dirs);

@@ -371,12 +371,12 @@ int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) 
             fs::create_directories(inner_stage / "licenses");
             fs::create_directories(outer_stage);
 
-            // 0. Copy CLI Binary if available
+            // 0. Copy Host Binaries (nxdev and hacbrewpack)
             fs::path host_bin;
-            if (fs::exists(repo_root / "build" / "cli" / "nxdev")) {
-                host_bin = repo_root / "build" / "cli" / "nxdev";
-            } else if (fs::exists(repo_root / "build" / "bin" / "nxdev")) {
+            if (fs::exists(repo_root / "build" / "bin" / "nxdev")) {
                 host_bin = repo_root / "build" / "bin" / "nxdev";
+            } else if (fs::exists(repo_root / "build" / "cli" / "nxdev")) {
+                host_bin = repo_root / "build" / "cli" / "nxdev";
             } else if (fs::exists("/proc/self/exe")) {
                 host_bin = "/proc/self/exe";
             }
@@ -384,6 +384,32 @@ int SdkCommand::execute(std::span<const std::string> args, CommandContext& ctx) 
             if (!host_bin.empty() && fs::exists(host_bin)) {
                 fs::copy_file(host_bin, inner_stage / "bin" / "nxdev", fs::copy_options::overwrite_existing);
                 fs::permissions(inner_stage / "bin" / "nxdev",
+                    fs::perms::owner_all | fs::perms::group_read | fs::perms::group_exec | fs::perms::others_read | fs::perms::others_exec);
+            }
+
+            // Copy hacbrewpack binary
+            fs::path hbp_bin;
+            if (fs::exists(repo_root / "build" / "bin" / "hacbrewpack")) {
+                hbp_bin = repo_root / "build" / "bin" / "hacbrewpack";
+            } else if (fs::exists(repo_root / "build" / "third_party" / "hacbrewpack" / "hacbrewpack")) {
+                hbp_bin = repo_root / "build" / "third_party" / "hacbrewpack" / "hacbrewpack";
+            } else if (const auto* t = ctx.env.get_tool("hacbrewpack"); t && t->usable) {
+                hbp_bin = t->path;
+            }
+
+            if (hbp_bin.empty() || !fs::exists(hbp_bin)) {
+                // If hacbrewpack is not yet built, build it now
+                std::vector<std::string> build_args = {"build-hacbrewpack"};
+                if (ctx.verbose) build_args.push_back("--verbose");
+                execute(build_args, ctx);
+                if (fs::exists(repo_root / "build" / "bin" / "hacbrewpack")) {
+                    hbp_bin = repo_root / "build" / "bin" / "hacbrewpack";
+                }
+            }
+
+            if (!hbp_bin.empty() && fs::exists(hbp_bin)) {
+                fs::copy_file(hbp_bin, inner_stage / "bin" / "hacbrewpack", fs::copy_options::overwrite_existing);
+                fs::permissions(inner_stage / "bin" / "hacbrewpack",
                     fs::perms::owner_all | fs::perms::group_read | fs::perms::group_exec | fs::perms::others_read | fs::perms::others_exec);
             }
 
